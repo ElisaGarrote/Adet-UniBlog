@@ -1,0 +1,166 @@
+/* Reset basic margins/paddings */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Left side (image background) */
+.login-left {
+  flex: 1;
+  height: 100%;
+}
+
+.background-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.login-right {
+  flex: 1;
+  background-color: #ffffff;          /* pure white, matches screenshot   */
+  display: flex;
+  justify-content: flex-start;            /* horizontally centre whole block */
+  align-items: flex-start;            /* stick content to the top         */
+  padding: 3rem 2rem;                 /* space around the edges           */
+}
+
+.right-content {                      /*  stack logo + form vertically   */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 400px;                   /* form width limit                 */
+}
+
+
+/* Uniblog logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;                /* gap before the form title        */
+}
+
+/*logo size (uniblog*/
+.logo {
+  width: 48px;
+  height: 48px;
+}
+/* Brand name (UniBlog) */
+.brand-name {
+  margin-left: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #000;
+}
+
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Login title (Log In my Account) */
+.login-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;                   /* was centred, screenshot is left  */
+}
+
+
+/* Inputs */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background-color: white;
+  color: black;
+}
+
+/* Password group with toggle */
+.password-group {
+  position: relative;
+}
+
+.password-toggle {
+  color: #333;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.password-toggle:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Forgot password */
+.forgot-password {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.forgot-link {
+  font-size: 0.9rem;
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Login button */
+.login-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4f9da6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-button:hover {
+  background-color: #3182ce;
+}
+
+/* Sign up link */
+.signup-link {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.signup-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+}
