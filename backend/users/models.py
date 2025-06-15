@@ -10,7 +10,8 @@ class CustomUser(AbstractUser):
         ("reader", "Reader"),
     )
 
-    # keep the built‑in username / password fields from AbstractUser
+    organization = models.CharField(max_length=150, blank=True, null=True)
+    department   = models.CharField(max_length=150, blank=True, null=True)
     first_name = models.CharField(max_length=150)
     last_name = models.CharField(max_length=150)
     created_at = models.DateTimeField(default=timezone.now, editable=False)

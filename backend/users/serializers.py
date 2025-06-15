@@ -1,9 +1,16 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import CustomUser
 
 
 class UserSerializer(serializers.ModelSerializer):
+    
+    username = serializers.EmailField(
+        validators=[UniqueValidator(queryset=CustomUser.objects.all())]
+    )
     password = serializers.CharField(write_only=True)
+
+
 
     class Meta:
         model = CustomUser
@@ -15,8 +22,10 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "created_at",
             "user_role",
+            "organization",   
+            "department",     
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id","user_role","created_at"]
 
     # hash password on create / update
     def create(self, validated_data):
