@@ -1,166 +1,237 @@
-/* Reset basic margins/paddings */
-body, html, #root {
+/* Userlogin.css */
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  height: 100vh;
-  width: 100vh;
-  font-family: 'Segoe UI', sans-serif;
+}
 
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
 }
 
 .login-container {
   display: flex;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  background-color: #f8f9fa;
 }
 
-/* Left side (image background) */
 .login-left {
-  flex: 1;
-  height: 100%;
+  flex: 1.5;
+  display: none; /* Hidden on mobile */
+  position: relative;
+  overflow: hidden;
 }
 
 .background-image {
-  height: 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.login-right {
+.right-content {
   flex: 1;
-  background-color: #ffffff;          /* pure white, matches screenshot   */
-  display: flex;
-  justify-content: flex-start;            /* horizontally centre whole block */
-  align-items: flex-start;            /* stick content to the top         */
-  padding: 3rem 2rem;                 /* space around the edges           */
-}
-
-.right-content {                      /*  stack logo + form vertically   */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 400px;                   /* form width limit                 */
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: white;
 }
 
-
-/* Uniblog logo */
 .logo-container {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;                /* gap before the form title        */
+  margin-bottom: 2rem;
+  text-decoration: none;
 }
 
-/*logo size (uniblog*/
 .logo {
-  width: 48px;
-  height: 48px;
-}
-/* Brand name (UniBlog) */
-.brand-name {
-  margin-left: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #000;
+  height: 40px;
+  margin-right: 10px;
 }
 
+.brand-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0;
+}
 
 .login-form-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.login-form {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  gap: 1.5rem;
 }
 
-/* Login title (Log In my Account) */
-.login-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  text-align: center;                   /* was centred, screenshot is left  */
-}
-
-
-/* Inputs */
 .input-group {
-  margin-bottom: 1rem;
+  position: relative;
 }
 
 .input-field {
   width: 100%;
-  padding: 0.75rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   font-size: 1rem;
-  background-color: white;
-  color: black;
+  transition: all 0.3s ease;
 }
 
-/* Password group with toggle */
+.input-field:focus {
+  border-color: #337b7c;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  outline: none;
+}
+
 .password-group {
-  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .password-toggle {
-  color: #333;
   position: absolute;
   right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
+  background: none;
   border: none;
-  outline: none;
   cursor: pointer;
-  padding: 0;
-  margin: 0;
+  color: #7f8c8d;
+  padding: 5px;
 }
 
-.password-toggle:focus {
-  outline: none;
-  box-shadow: none;
+.password-toggle:hover {
+  color: #337b7c;
 }
 
-/* Forgot password */
 .forgot-password {
   text-align: right;
-  margin-bottom: 1rem;
+  margin-top: -0.5rem;
 }
 
 .forgot-link {
-  font-size: 0.9rem;
-  color: #007bff;
+  color: #7f8c8d;
   text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
 }
 
-/* Login button */
+.forgot-link:hover {
+  color: #337b7c;
+}
+
 .login-button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #4f9da6;
+  padding: 12px;
+  background-color: #337b7c;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .login-button:hover {
-  background-color: #3182ce;
+  background-color: #2980b9;
+  transform: translateY(-2px);
 }
 
-/* Sign up link */
+.login-button:active {
+  transform: translateY(0);
+}
+
 .signup-link {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+  color: #7f8c8d;
   font-size: 0.9rem;
-  text-align: center;
 }
 
 .signup-button {
   background: none;
   border: none;
-  color: #007bff;
+  color: #337b7c;
+  font-weight: 600;
   cursor: pointer;
   padding: 0;
-  margin-left: 0.25rem;
+  margin-left: 5px;
+  transition: color 0.3s ease;
+}
+
+.signup-button:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (min-width: 768px) {
+  .login-left {
+    display: block;
+  }
+  
+  .login-form-container {
+    padding: 2.5rem;
+    box-shadow: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .login-form-container {
+    padding: 3rem;
+  }
+  
+  .login-title {
+    font-size: 1.8rem;
+  }
+  
+  .input-field {
+    padding: 14px 16px;
+  }
+  
+  .login-button {
+    padding: 14px;
+  }
+}
+
+/* Animation for better UX */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.login-form-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.input-group {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.login-button {
+  animation: fadeIn 0.7s ease-out;
+}
+
+.signup-link {
+  animation: fadeIn 0.8s ease-out;
 }
