@@ -151,7 +151,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWS_CREDNTIALS = True
+CORS_ALLOW_CREDNTIALS = True
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+# backend/settings.py
+#EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"   # prints to console
+DEFAULT_FROM_EMAIL = "noreply@uniblog.local"
+
+# Where should the email link land?
+FRONTEND_RESET_URL = os.getenv("FRONTEND_RESET_URL", "http://localhost:5173/reset-password")
+
+EMAIL_BACKEND  = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST     = "smtp.mailgun.org"
+EMAIL_HOST_USER= os.getenv("SMTP_USER")
+EMAIL_HOST_PASSWORD = os.getenv("SMTP_PASSWORD")
+EMAIL_PORT     = 587
+EMAIL_USE_TLS  = True
