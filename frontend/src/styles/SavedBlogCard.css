@@ -1,0 +1,133 @@
+/* SavedBlogCard.css */
+.saved-blog-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.saved-blog-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.blog-image-container {
+  flex-shrink: 0;
+  width: 120px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.save-blog-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.saved-blog-card:hover .blog-image {
+  transform: scale(1.05);
+}
+
+.blog-content {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.blog-tags {
+  display: flex;
+  font-family: 'Epilogue', sans-serif;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tag {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  font-family: 'Epilogue', sans-serif;
+  background-color: #f0f5ff;
+  color: #337b7c;
+  border-radius: 12px;
+}
+
+.blog-title {
+  margin: 0.2rem 0;
+  font-size: 1rem;
+  font-family: 'Epilogue', sans-serif;
+  color: #2d3748;
+}
+
+.blog-title a {
+  color: inherit;
+  text-decoration: none;
+  font-family: 'Epilogue', sans-serif;
+}
+
+.blog-title a:hover {
+  color: #337b7c;
+  text-decoration: underline;
+}
+
+.blog-description {
+  margin: 0.5rem 0;
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-family: 'Epilogue', sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.blog-author {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #718096;
+  font-family: 'Epilogue', sans-serif;
+  font-style: italic;
+}
+
+.remove-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e53e3e;
+}
+
+.remove-button:hover {
+  background-color: #fff5f5;
+  border-color: #fc8181;
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .blog-image-container {
+    width: 80px;
+    height: 60px;
+  }
+  
+  .blog-title {
+    font-size: 0.9rem;
+  }
+  
+  .blog-description {
+    -webkit-line-clamp: 1;
+  }
+}
