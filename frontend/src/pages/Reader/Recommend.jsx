@@ -69,7 +69,7 @@ const Recommend = () => {
         <BlogGrid blogs={mockBlogs} />
         
         <div className="view-more-container">
-          <Link to="/latest" className="view-more-button">
+          <Link to="/latestblog" className="view-more-button">
             View Latest Blogs
           </Link>
         </div>

@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import loginbg from "../assets/img/loginbg.png";
 import uniblogo from "../assets/icons/uniblog.svg";
 import "../styles/Userlogin.css";
+import apid from "../api";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 
 function Userlogin() {
   const [email, setEmail] = useState("");
@@ -11,12 +13,23 @@ function Userlogin() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Add your login logic here
-    console.log("Login attempted with:", { email, password });
-  };
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const { data } = await apid.post("/auth/token/", {
+      username: email,  // must match the backend 'username' field, which is an EmailField
+      password: password,
+    });
 
+    localStorage.setItem(ACCESS_TOKEN, data.access);
+    localStorage.setItem(REFRESH_TOKEN, data.refresh);
+
+    navigate("/recommendation"); // protected route
+  } catch (err) {
+    console.error("Login failed:", err);
+    alert("Invalid email or password");
+  }
+};
   const handleSignUp = () => {
     navigate("/signup"); // Navigate to the signup page
   };

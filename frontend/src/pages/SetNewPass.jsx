@@ -28,21 +28,45 @@ function SetNewPass() {
 
   const unmetCriteria = criteria.filter((c) => !c.test(password));
 
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+
+    if (!uid || !token) {
+      setError("Reset link is invalid or expired.");
+      return;
+    }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
 
     if (unmetCriteria.length > 0) {
-      alert("Please meet all password requirements.");
+      setError("Please meet all password requirements.");
       return;
     }
 
-    console.log("New password set:", password);
+    try {
+      const res = await fetch("http://localhost:8000/users/password-reset/confirm/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid, token, new_password: password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.detail || "Failed to reset password.");
+      } else {
+        setSuccess(true);
+        setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
+      }
+    } catch (err) {
+      setError("Network error. Please try again.");
+    }
   };
+
 
   return (
     <div className="set-password-container">

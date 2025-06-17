@@ -14,6 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=CustomUser.objects.all())]
     )
     password = serializers.CharField(write_only=True)
+    profilepic = serializers.ImageField(required=False, allow_null=True)
+
     class Meta:
         model = CustomUser
         fields = [
@@ -25,7 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
             "created_at",
             "user_role",
             "organization",   
-            "department",     
+            "department",
+            "profilepic",      
         ]
         read_only_fields = ["id","user_role","created_at"]
 

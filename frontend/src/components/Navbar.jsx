@@ -9,11 +9,11 @@ function NavBar() {
   const [showBrowseDropdown, setShowBrowseDropdown] = useState(false);
 
   // Sample categories for navigation
-  const browseCategories = [
-    { name: "Study Tips", path: "/tags" },
-    { name: "Web Development", path: "" },
-    { name: "CommITs", path: "" }
-  ];
+const browseCategories = [
+  { name: "Study Tips", path: "/tags" },
+  { name: "Web Development", path: "/webdev" },
+  { name: "CommITs", path: "/commits" }
+];
 
   return (
     <nav className="navbar">

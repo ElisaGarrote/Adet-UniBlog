@@ -16,7 +16,7 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=150)
     created_at = models.DateTimeField(default=timezone.now, editable=False)
     user_role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="reader")
-
+    profilepic = models.ImageField(upload_to='profile_pics/',blank=True,null=True)
     class Meta:
         verbose_name = "user"
         verbose_name_plural = "users"

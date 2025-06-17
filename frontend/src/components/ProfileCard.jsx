@@ -20,7 +20,7 @@ const ProfileCard = ({ user }) => {
   const handlePictureClick = () => {
     fileInputRef.current.click();
   };
-
+  
   return (
   <div className="profile-card">
         <h2 className="profile-header">Profile Information</h2>

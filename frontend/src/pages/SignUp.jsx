@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import loginbg from "../assets/img/loginbg.png";
 import uniblogo from "../assets/icons/uniblog.svg";
 import "../styles/Userlogin.css";
+import api from "../api";                      // << use the same axios instance
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -10,42 +12,63 @@ function Signup() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showCriteria, setShowCriteria] = useState(false);
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
 
   const criteria = [
-    {
-      label: "Password must be at least 8 characters long",
-      test: (pwd) => pwd.length >= 8,
-    },
-    {
-      label: "Password must contain at least one uppercase letter",
-      test: (pwd) => /[A-Z]/.test(pwd),
-    },
-    {
-      label: "Password must contain at least one number",
-      test: (pwd) => /\d/.test(pwd),
-    },
-    {
-      label: "Password must contain at least one special character",
-      test: (pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
-    },
+    { label: "≥ 8 characters",                test: (p) => p.length >= 8 },
+    { label: "1 uppercase letter",            test: (p) => /[A-Z]/.test(p) },
+    { label: "1 number",                      test: (p) => /\d/.test(p) },
+    { label: "1 special character",           test: (p) => /[!@#$%^&*(),.?\":{}|<>]/.test(p) },
   ];
+  const unmet = criteria.filter((c) => !c.test(password));
+
 
   const unmetCriteria = criteria.filter((c) => !c.test(password));
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
+    /* quick client‑side checks */
     if (password !== confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
-
-    if (unmetCriteria.length > 0) {
+    if (unmet.length) {
       alert("Please meet all password requirements.");
       return;
     }
 
-    console.log("Signup attempted with:", { email, password });
+    setLoading(true);
+    try {
+      /* 1️⃣  create the user */
+      await api.post("/auth/register/", {
+        username: email,        // your backend treats email as username
+        password: password,
+      });
+
+      /* 2️⃣  immediately log the user in (same endpoint your login page hits) */
+      const { data } = await api.post("/auth/token/", {
+        username: email,
+        password,
+      });
+
+      localStorage.setItem(ACCESS_TOKEN, data.access);
+      localStorage.setItem(REFRESH_TOKEN, data.refresh);
+
+      /* 3️⃣  go somewhere protected  */
+      navigate("/recommendation");
+    } catch (err) {
+      console.error("Signup failed:", err);
+      const msg =
+        err.response?.data?.username?.[0] ||
+        err.response?.data?.detail ||
+        "Signup failed – please try again.";
+      alert(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

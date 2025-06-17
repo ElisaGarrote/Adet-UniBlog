@@ -45,6 +45,7 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 
@@ -151,7 +152,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDNTIALS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -169,3 +170,6 @@ EMAIL_HOST_USER= os.getenv("SMTP_USER")
 EMAIL_HOST_PASSWORD = os.getenv("SMTP_PASSWORD")
 EMAIL_PORT     = 587
 EMAIL_USE_TLS  = True
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
