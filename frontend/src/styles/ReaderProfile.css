@@ -6,6 +6,20 @@
   padding: 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  position: relative; /* Add this */
+  z-index: 1; /* Add this */
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-section {
@@ -39,6 +53,8 @@
     margin-bottom: 2rem;
   }
 }
+
+
 
 @media (max-width: 480px) {
   .reader-profile-page {

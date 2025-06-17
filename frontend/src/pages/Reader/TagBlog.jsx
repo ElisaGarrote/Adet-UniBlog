@@ -68,12 +68,6 @@ const Tagsblog = () => {
         <p className="subtitle">Here are the blogs for your selected tags</p>
         
         <BlogGrid blogs={mockBlogs} />
-        
-        <div className="view-more-container">
-          <Link to="/latest" className="view-more-button">
-            View Latest Blogs
-          </Link>
-        </div>
         {/* Your blog content here */}
         <Pagination 
            

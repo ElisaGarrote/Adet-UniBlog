@@ -20,6 +20,7 @@ const ReaderProfile = () => {
     createdAt: 'Joined January 2023'
   };
 
+
   // Mock saved blogs data - replace with real data later
   const savedBlogs = [
     {

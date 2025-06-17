@@ -9,6 +9,12 @@ import Signup from './pages/SignUp.jsx';
 import Tagsblog from './pages/Reader/TagBlog.jsx';
 import Latestblog from './pages/Reader/LatestBlog.jsx';
 import ReaderProfile from './pages/Reader/ReaderProfile.jsx';
+import UpdateProfilePage from './components/EditProfile.jsx';
+import ChangePassword from './components/ChangePass.jsx';
+import BlogPage from './components/BlogContent.jsx';
+import AboutPage from './pages/About.jsx';
+import PrivacyPolicy from './pages/Privacy.jsx';
+
 
 function AppWrapper() {
   const location = useLocation();
@@ -31,6 +37,16 @@ function AppWrapper() {
         <Route path="/tags" element={<Tagsblog />} />
         <Route path="/latestblog" element={<Latestblog />} />
         <Route path="/profile" element={<ReaderProfile />} />
+        <Route path="/updateprofile" element={<UpdateProfilePage />} />
+        <Route path="/updatepassword" element={<ChangePassword />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+
+
+
+
+
 
       </Routes>
     </>
