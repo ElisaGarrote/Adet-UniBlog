@@ -21,7 +21,7 @@ const SavedBlogCard = ({ blog, onRemove }) => {
         </div>
         
         <h3 className="blog-title">
-          <Link to={`/blog/${blog.id}`}>{blog.title}</Link>
+          <Link to={`/blog`}>{blog.title}</Link>
         </h3>
         
         <p className="blog-description">

@@ -71,6 +71,7 @@ function NavBar() {
           {showProfileDropdown && (
             <div className="dropdown-menu profile-dropdown">
               <Link to="/profile" className="dropdown-item">Profile</Link>
+              <Link to="/notification" className="dropdown-item">Notification</Link>
               <Link to="/logout" className="dropdown-item-logout">Logout</Link>
             </div>
           )}

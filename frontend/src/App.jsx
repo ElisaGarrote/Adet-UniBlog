@@ -14,6 +14,7 @@ import ChangePassword from './components/ChangePass.jsx';
 import BlogPage from './components/BlogContent.jsx';
 import AboutPage from './pages/About.jsx';
 import PrivacyPolicy from './pages/Privacy.jsx';
+import NotificationsPage from './pages/Reader/Notification.jsx';
 
 
 function AppWrapper() {
@@ -42,6 +43,8 @@ function AppWrapper() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+        <Route path="/notification" element={<NotificationsPage />} />
+
 
 
 
