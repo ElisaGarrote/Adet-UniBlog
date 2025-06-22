@@ -70,7 +70,7 @@ const Recommend = () => {
         
         <div className="view-more-container">
           <Link to="/latest" className="view-more-button">
-            View Latest Blogs
+            View More Blogs
           </Link>
         </div>
       </main>

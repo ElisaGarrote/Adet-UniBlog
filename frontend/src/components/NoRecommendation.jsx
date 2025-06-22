@@ -7,7 +7,7 @@ const NoRecommendations = () => {
     <div className="no-recommendations">
       <p>No personalized recommendations found.</p>
       <Link to="/latest" className="view-latest-button">
-        View Latest Blogs
+        View More Blogs
       </Link>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/icons/uniblog.svg";
@@ -7,6 +7,8 @@ import profilePic from "../assets/img/profilepic.jpg";
 function NavBar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showBrowseDropdown, setShowBrowseDropdown] = useState(false);
+  const profileRef = useRef(null);
+  const browseRef = useRef(null);
 
   // Sample categories for navigation
   const browseCategories = [
@@ -14,6 +16,23 @@ function NavBar() {
     { name: "Web Development", path: "" },
     { name: "CommITs", path: "" }
   ];
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowProfileDropdown(false);
+      }
+      if (browseRef.current && !browseRef.current.contains(event.target)) {
+        setShowBrowseDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="navbar">
@@ -26,10 +45,14 @@ function NavBar() {
 
         <div
           className="nav-dropdown"
-          onMouseEnter={() => setShowBrowseDropdown(true)}
-          onMouseLeave={() => setShowBrowseDropdown(false)}
+          ref={browseRef}
         >
-          <span className="nav-link">Browse</span>
+          <span 
+            className="nav-link"
+            onClick={() => setShowBrowseDropdown(!showBrowseDropdown)}
+          >
+            Browse
+          </span>
           {showBrowseDropdown && (
             <div className="dropdown-menu browse-dropdown">
               {browseCategories.map((category) => (
@@ -56,23 +79,19 @@ function NavBar() {
         <span className="username">Zaichooo</span>
         <div 
           className="profile-dropdown-container"
-          onMouseEnter={() => setShowProfileDropdown(true)}
-          onMouseLeave={() => setShowProfileDropdown(false)}
+          ref={profileRef}
         >
           <img
             src={profilePic}
             alt="Profile"
             className="profile-pic"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowProfileDropdown((prev) => !prev);
-            }}
+            onClick={() => setShowProfileDropdown(!showProfileDropdown)}
           />
           {showProfileDropdown && (
             <div className="dropdown-menu profile-dropdown">
-              <Link to="/profile" className="dropdown-item">Profile</Link>
-              <Link to="/notification" className="dropdown-item">Notification</Link>
-              <Link to="/logout" className="dropdown-item-logout">Logout</Link>
+              <Link to="/profile" className="dropdown-item" onClick={() => setShowProfileDropdown(false)}>Profile</Link>
+              <Link to="/notification" className="dropdown-item" onClick={() => setShowProfileDropdown(false)}>Notification</Link>
+              <Link to="/logout" className="dropdown-item-logout" onClick={() => setShowProfileDropdown(false)}>Logout</Link>
             </div>
           )}
         </div>

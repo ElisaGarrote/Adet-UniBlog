@@ -2,10 +2,12 @@
   --primary-color: #337b7c;
   --primary-light: #5a9c9d;
   --report-color: #e74c3c;
-  --newpost-color: #2ecc71;
+  --newpost-color: #337b7c;
   --text-dark: #2d3748;
   --text-medium: #4a5568;
   --border-light: #e2e8f0;
+   --hover-bg: #f8fafc; /* Light hover background */
+  --shadow-hover: 0 4px 6px rgba(0,0,0,0.1); /* Enhanced shadow on hover */
 }
 
 /* Layout Structure */
@@ -171,6 +173,76 @@
   padding: 0.25rem;
 }
 
+/* Scrollable Notifications List */
+.notifications-list {
+  max-height: calc(100vh - 220px); /* Adjust based on your header height */
+  overflow-y: auto;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: var(--primary-light) #f1f1f1; /* For Firefox */
+  padding-right: 0.5rem; /* Prevent content from touching scrollbar */
+  margin-right: -0.5rem; /* Compensate for padding */
+}
+
+/* Custom scrollbar for Webkit browsers */
+.notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+  background: var(--primary-light);
+  border-radius: 10px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* Hover Effects for Notification Cards */
+.notification-item {
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background-color: var(--hover-bg);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Hover effects for buttons */
+.mark-all-read:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+.clear-all:hover {
+  background-color: #e2e8f0;
+  transform: translateY(-1px);
+}
+
+.action-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.dismiss-button:hover {
+  color: var(--report-color);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Smooth transitions for all interactive elements */
+.mark-all-read,
+.clear-all,
+.action-button,
+.dismiss-button {
+  transition: all 0.2s ease;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 640px) {
   .notifications-container {
@@ -197,6 +269,15 @@
   .action-button {
     align-self: flex-end;
     margin-top: 0.5rem;
+  }
+
+  .notification-item:hover {
+    transform: none; /* Disable lift effect on mobile */
+  }
+  
+  .mark-all-read:hover,
+  .clear-all:hover {
+    transform: none;
   }
 }
 

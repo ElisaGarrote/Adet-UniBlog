@@ -1,10 +1,11 @@
-import React from 'react';
-import { FaBell, FaExclamationTriangle, FaNewspaper, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import { FaBell } from 'react-icons/fa';
 import Footer from '../../components/Footer';
+import NotificationCard from '../../components/NotificationCard';
 import '../../styles/Notification.css';
 
 const NotificationsPage = () => {
-  const notifications = [
+  const [notifications, setNotifications] = useState([
     {
       id: 1,
       type: 'report',
@@ -23,25 +24,76 @@ const NotificationsPage = () => {
       read: true,
       action: 'read'
     },
-    {
-      id: 3,
-      type: 'report',
-      title: 'Report Status Update',
-      message: 'Your report on "Campus Politics" is under review',
-      time: '1 day ago',
-      read: true,
-      action: 'view'
-    },
-    {
-      id: 4,
+
+        {
+      id: 2,
       type: 'new-post',
-      title: 'New Blog in Engineering',
-      message: 'New post available: "Sustainable Architecture in 2023"',
-      time: '2 days ago',
+      title: 'New Blog in Computer Science',
+      message: 'Dr. Smith published "Quantum Computing Advances" in your department',
+      time: '5 hours ago',
       read: true,
       action: 'read'
+    },
+
+        {
+      id: 2,
+      type: 'new-post',
+      title: 'New Blog in Computer Science',
+      message: 'Dr. Smith published "Quantum Computing Advances" in your department',
+      time: '5 hours ago',
+      read: true,
+      action: 'read'
+    },
+
+    {
+      id: 2,
+      type: 'new-post',
+      title: 'New Blog in Computer Science',
+      message: 'Dr. Smith published "Quantum Computing Advances" in your department',
+      time: '5 hours ago',
+      read: true,
+      action: 'read'
+    },
+    // Add more notifications as needed
+  ]);
+
+  const [feedback, setFeedback] = useState({
+    message: '',
+    visible: false
+  });
+
+  const showFeedback = (message) => {
+    setFeedback({ message, visible: true });
+    setTimeout(() => {
+      setFeedback(prev => ({ ...prev, visible: false }));
+    }, 3000);
+  };
+
+  const handleDismiss = (id) => {
+    setNotifications(notifications.filter(notification => notification.id !== id));
+    showFeedback('Notification dismissed');
+  };
+
+  const markAllAsRead = () => {
+    if (notifications.some(n => !n.read)) {
+      setNotifications(notifications.map(notification => ({
+        ...notification,
+        read: true
+      })));
+      showFeedback('All notifications marked as read');
+    } else {
+      showFeedback('All notifications are already read');
     }
-  ];
+  };
+
+  const clearAll = () => {
+    if (notifications.length > 0) {
+      setNotifications([]);
+      showFeedback('All notifications cleared');
+    } else {
+      showFeedback('No notifications to clear');
+    }
+  };
 
   return (
     <div className="notifications-wrapper">
@@ -49,41 +101,37 @@ const NotificationsPage = () => {
         <header className="notifications-header">
           <h1><FaBell /> Notifications</h1>
           <div className="notification-actions">
-            <button className="mark-all-read">Mark all as read</button>
-            <button className="clear-all">Clear all</button>
+            <button className="mark-all-read" onClick={markAllAsRead}>
+              Mark all as read
+            </button>
+            <button className="clear-all" onClick={clearAll}>
+              Clear all
+            </button>
           </div>
         </header>
 
         <div className="notifications-list">
-          {notifications.map((notification) => (
-            <div 
-              key={notification.id} 
-              className={`notification-item ${notification.read ? 'read' : 'unread'} ${notification.type}`}
-            >
-              <div className="notification-icon">
-                {notification.type === 'report' ? (
-                  <FaExclamationTriangle className="report-icon" />
-                ) : (
-                  <FaNewspaper className="newpost-icon" />
-                )}
-              </div>
-              <div className="notification-content">
-                <h3>{notification.title}</h3>
-                <p>{notification.message}</p>
-                <div className="notification-meta">
-                  <span className="notification-time">{notification.time}</span>
-                  <button className={`action-button ${notification.action}`}>
-                    {notification.action === 'view' ? 'View' : 'Read Now'}
-                  </button>
-                </div>
-              </div>
-              <button className="dismiss-button">
-                <FaTimes />
-              </button>
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <NotificationCard
+                key={notification.id}
+                notification={notification}
+                onDismiss={handleDismiss}
+              />
+            ))
+          ) : (
+            <div className="empty-state">
+              <p>No notifications to display</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
+
+      {/* Feedback message */}
+      <div className={`action-feedback ${feedback.visible ? 'visible' : ''}`}>
+        {feedback.message}
+      </div>
+
       <Footer />
     </div>
   );
