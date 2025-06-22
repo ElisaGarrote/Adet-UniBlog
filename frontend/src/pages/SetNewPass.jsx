@@ -1,11 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useSearchParams, useNavigate } from "react-router-dom";
 import logo from "../assets/icons/uniblog.svg"; // Adjust path if needed
 
 function SetNewPass() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showCriteria, setShowCriteria] = useState(false);
+
+
+const [searchParams] = useSearchParams();
+const navigate = useNavigate();
+const uid = searchParams.get("uid");
+const token = searchParams.get("token");
 
   const criteria = [
     {
@@ -29,43 +35,49 @@ function SetNewPass() {
   const unmetCriteria = criteria.filter((c) => !c.test(password));
 
 const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (!uid || !token) {
-      setError("Reset link is invalid or expired.");
-      return;
+  if (!uid || !token) {
+    setError("Reset link is invalid or expired.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setError("Passwords do not match.");
+    return;
+  }
+
+  if (unmetCriteria.length > 0) {
+    setError("Please meet all password requirements.");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:8000/auth/password-reset/complete/", {
+      method: "PATCH", // <-- THIS IS THE PATCH METHOD
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        uidb64: uid,             // <- uid from query string
+        token: token,            // <- token from query string
+        password: password,      // <- new password
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      setError(data.detail || "Failed to reset password.");
+    } else {
+      setSuccess(true);
+      setTimeout(() => navigate("/login"), 3000);
     }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    if (unmetCriteria.length > 0) {
-      setError("Please meet all password requirements.");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:8000/users/password-reset/confirm/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid, token, new_password: password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.detail || "Failed to reset password.");
-      } else {
-        setSuccess(true);
-        setTimeout(() => navigate("/login"), 3000); // Redirect after 3 seconds
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    }
-  };
+  } catch (err) {
+    setError("Network error. Please try again.");
+  }
+};
 
 
   return (

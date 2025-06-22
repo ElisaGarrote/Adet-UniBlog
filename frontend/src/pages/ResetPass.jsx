@@ -9,31 +9,58 @@ function ResetPassword() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
+
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
 
-  const handleSendEmail = (e) => {
+   const handleSendEmail = async (e) => {
     e.preventDefault();
-    
+
+    // Reset previous messages
+    setEmailError("");
+    setServerMessage("");
+
     if (!email) {
       setEmailError("Email is required");
       return;
     }
-    
+
     if (!validateEmail(email)) {
       setEmailError("Please enter a valid email address");
       return;
     }
 
-    setEmailError("");
-    console.log("Reset email sent to:", email);
-    setIsSubmitted(true);
+    try {
+      const res = await fetch("http://localhost:8000/auth/password-reset/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }), // email is your username in this case
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.email) {
+          setEmailError(data.email[0]);
+        } else {
+          setServerMessage(data.detail || "Something went wrong. Please try again.");
+        }
+      } else {
+        setIsSubmitted(true);
+        setServerMessage("Password reset link has been sent if the account exists.");
+      }
+    } catch (err) {
+      setServerMessage("Network error. Please try again later.");
+    }
   };
 
-  return (
+    return (
     <div className="reset-container">
       <div className="reset-header">
         <img src={logo} alt="Logo" className="reset-logo" />
@@ -48,7 +75,7 @@ function ResetPassword() {
 
         {isSubmitted ? (
           <div className="reset-success">
-            <p>Password reset link has been sent to your email.</p>
+            <p>{serverMessage}</p>
           </div>
         ) : (
           <form onSubmit={handleSendEmail} className="reset-form" noValidate>
@@ -73,6 +100,10 @@ function ResetPassword() {
           </form>
         )}
 
+        {serverMessage && !isSubmitted && (
+          <p className="server-message">{serverMessage}</p>
+        )}
+
         <div className="alternative-link">
           <Link to="/login">Try different log in method</Link>
         </div>
@@ -80,5 +111,4 @@ function ResetPassword() {
     </div>
   );
 }
-
 export default ResetPassword;

@@ -9,6 +9,12 @@ import Tagsblog from './pages/Reader/TagBlog.jsx';
 import Latestblog from './pages/Reader/LatestBlog.jsx';
 import ReaderProfile from './pages/Reader/ReaderProfile.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+
+import ProfileCard from './components/ProfileCard';
+import EditProfile from './components/EditProfile';
+import ChangePass from './components/ChangePass';
+import UpdateProfilePage from './components/EditProfile';
+
 function Logout(){
   localStorage.clear();
   return <Navigate to="/login" />;
@@ -24,28 +30,42 @@ function AppWrapper() {
     <>
       {!hideNav && <NavBar />}
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Userlogin />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/setnewpassword" element={<SetNewPassword />} />
-        
-        {/* Protected Routes */}
-        <Route path="/recommendation" element={
-          <ProtectedRoute><Recommend /></ProtectedRoute>
-        } />
-        <Route path="/tags" element={
-          <ProtectedRoute><Tagsblog /></ProtectedRoute>
-        } />
-        <Route path="/latestblog" element={
-          <ProtectedRoute><Latestblog /></ProtectedRoute>
-        } />
-        <Route path="/profile" element={
-          <ProtectedRoute><ReaderProfile /></ProtectedRoute>
-        } />
-        <Route path="/logout" element={<Logout />} />
-      </Routes>
+  {/* Public Routes */}
+  <Route path="/" element={<Navigate to="/login" replace />} />
+  <Route path="/login" element={<Userlogin />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/resetpassword" element={<ResetPassword />} />
+  <Route path="/setnewpassword" element={<SetNewPassword />} />
+  
+  {/* Protected Routes */}
+  <Route path="/recommendation" element={
+    <ProtectedRoute><Recommend /></ProtectedRoute>
+  } />
+  <Route path="/tags" element={
+    <ProtectedRoute><Tagsblog /></ProtectedRoute>
+  } />
+  <Route path="/latestblog" element={
+    <ProtectedRoute><Latestblog /></ProtectedRoute>
+  } />
+  <Route path="/profile" element={
+    <ProtectedRoute><ReaderProfile /></ProtectedRoute>
+  } />
+
+  {/* ✅ New Protected Routes for Profile Actions */}
+  <Route path="/updateprofile" element={
+    <ProtectedRoute><UpdateProfilePage /></ProtectedRoute>
+  } />
+  <Route path="/change-password" element={
+    <ProtectedRoute><ChangePass /></ProtectedRoute>
+  } />
+  <Route path="/profile-card" element={
+    <ProtectedRoute><ProfileCard /></ProtectedRoute>
+  } />
+
+  {/* Logout */}
+  <Route path="/logout" element={<Logout />} />
+</Routes>
+
     </>
   );
 }

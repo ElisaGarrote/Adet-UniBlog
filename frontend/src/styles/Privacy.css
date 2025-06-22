@@ -1,0 +1,151 @@
+:root {
+  --primary-color: #337b7c;
+  --primary-light: #5a9c9d;
+  --primary-dark: #1a5b5c;
+  --text-dark: #2d3748;
+  --text-medium: #4a5568;
+  --text-light: #718096;
+  --background-light: #f8fafc;
+  --background-accent: #f0f7f7;
+  --border-radius: 0.5rem;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Wrapper for full-width footer */
+.privacy-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main Content Container */
+.privacy-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  flex: 1;
+  color: var(--text-dark);
+  line-height: 1.7;
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  padding: 1.75rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  margin-bottom: 1.5rem;
+}
+
+/* Header Section */
+.privacy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+.privacy-header h1 {
+  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.last-updated {
+  color: var(--text-medium);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* Policy Content Sections */
+.policy-section h2 {
+  color: var(--primary-dark);
+  margin: 2rem 0 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+}
+
+/* Information Grid Layout */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.info-card h3 {
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.info-card ul {
+  padding-left: 1.25rem;
+}
+
+.info-card li {
+  margin-bottom: 0.5rem;
+  color: var(--text-medium);
+}
+
+/* Cookie Section Specifics */
+.cookie-note {
+  margin-top: 1rem;
+  font-style: italic;
+  color: var(--text-medium);
+}
+
+/* Contact Section */
+.contact-section {
+  background: var(--background-accent);
+  border: 1px solid rgba(51, 123, 124, 0.15);
+}
+
+.contact-section a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.contact-section a:hover {
+  text-decoration: underline;
+}
+
+/* Footer will be full-width by default */
+footer {
+  width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .privacy-container {
+    padding: 1.5rem 1rem;
+  }
+  
+  .privacy-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+  
+  .policy-section h2 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .privacy-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
