@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Add this import
 import ReactDOM from "react-dom";
 import "../styles/BlogCardWriter.css";
 
 const BlogCardWriter = ({ blog, onDeleteBlog }) => {
   const { id, title, tags, image, updatedAt, viewCount, saveCount } = blog;
   const [showConfirm, setShowConfirm] = useState(false);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   const handleDeleteClick = () => {
     setShowConfirm(true);
@@ -17,6 +19,10 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
 
   const cancelDelete = () => {
     setShowConfirm(false);
+  };
+
+  const handleEditClick = () => {
+    navigate("/updateblog"); // Simple navigation without data
   };
 
   return (
@@ -44,7 +50,7 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
         <div className="writer-blog-actions">
           <button
             className="writer-view-button"
-            onClick={() => console.log("Edit blog", id)}
+            onClick={handleEditClick}
           >
             Edit
           </button>
@@ -77,7 +83,7 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
               </div>
             </div>
           </div>,
-          document.body // Mount modal outside card to avoid clipping
+          document.body
         )}
     </>
   );

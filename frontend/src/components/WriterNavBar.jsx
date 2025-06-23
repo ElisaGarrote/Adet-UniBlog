@@ -68,7 +68,7 @@ function WriterNavbar() {
           )}
         </div>
 
-        <Link to="/writeblog" className="nav-link">Write Blog</Link>
+        <Link to="/writeblogpage" className="nav-link">Write Blog</Link>
 
         <input type="text" placeholder="Search..." className="search-input" />
       </div>

@@ -20,6 +20,8 @@ import NotificationsPage from './pages/Reader/Notification.jsx';
 import Dashboard from './pages/Adminn/Dashboard.jsx';
 import WriterDashboard from './pages/Writer/WriterDashboard.jsx';
 import WriteBlogPage from './pages/Writer/WriteBlogPage.jsx';
+import WriteBlog from './pages/Writer/WriteBlog.jsx';
+import EditBlog from './pages/Writer/EditBlog.jsx';
 
 function AppWrapper() {
   const location = useLocation();
@@ -73,7 +75,9 @@ function AppWrapper() {
         
         {/* Add Writer Routes here when you develop them */}
         <Route path="/writerdashboard" element={<WriterDashboard />} />
-        <Route path="/writeblog" element={<WriteBlogPage />} />
+        <Route path="/writeblogpage" element={<WriteBlogPage />} />
+        <Route path="/writeblog" element={<WriteBlog />} />
+        <Route path="/updateblog" element={<EditBlog />} />
 
 
       </Routes>

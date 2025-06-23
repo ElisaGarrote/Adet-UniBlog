@@ -12,7 +12,7 @@ const REGISTERED_TAGS = [
   "UX", "UI", "Frontend", "Backend", "Node.js"
 ];
 
-const WriteBlog = () => {
+const EditBlog = () => {
   const [headerImage, setHeaderImage] = useState(null);
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState("");
@@ -110,4 +110,4 @@ const WriteBlog = () => {
   );
 };
 
-export default WriteBlog;
+export default EditBlog;
