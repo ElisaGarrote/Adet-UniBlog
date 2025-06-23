@@ -17,34 +17,52 @@ function NavBar() {
     { name: "CommITs", path: "/commits" },
   ];
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("access");
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/me/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+useEffect(() => {
+  const fetchUser = async () => {
+    const token = localStorage.getItem("access");
 
-        if (!res.ok) throw new Error("Failed to fetch user");
+    // 1.  If there is no token yet, skip the call.
+    if (!token) {
+      setUser(null);
+      return;
+    }
 
-        const data = await res.json();
-        setUser(data);
-
-        if (data.profilepic) {
-          const imageUrl = data.profilepic.startsWith("http")
-            ? data.profilepic
-            : `${import.meta.env.VITE_API_URL}${data.profilepic}`;
-          setProfileImage(imageUrl);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/users/me/`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-      } catch (err) {
-        console.error("Error fetching user data:", err);
-      }
-    };
+      );
 
-    fetchUser();
-  }, []);
+      // 2.  If the token is expired you can try to refresh here,
+      //     or just log the user out:
+      if (res.status === 401) {
+        console.warn("Access token expired or invalid");
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        setUser(null);
+        return;
+      }
+
+      if (!res.ok) throw new Error("Failed to fetch user");
+
+      const data = await res.json();
+      setUser(data);
+      if (data.profilepic) {
+        setProfileImage(
+          data.profilepic.startsWith("http")
+            ? data.profilepic
+            : `${import.meta.env.VITE_API_URL}${data.profilepic}`
+        );
+      }
+    } catch (err) {
+      console.error("Error fetching user data:", err);
+    }
+  };
+
+  fetchUser();
+}, []);
 
   // Close dropdown on outside click
   useEffect(() => {

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { Link,useSearchParams, useNavigate } from "react-router-dom";
-import logo from "../assets/icons/uniblog.svg"; // Adjust path if needed
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import logo from "../assets/icons/uniblog.svg";
+import "../styles/SetNewPass.css";
 
 function SetNewPass() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showCriteria, setShowCriteria] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const uid = searchParams.get("uid");
+  const token = searchParams.get("token");
+  const navigate = useNavigate();
 
-const [searchParams] = useSearchParams();
-const navigate = useNavigate();
-const uid = searchParams.get("uid");
-const token = searchParams.get("token");
 
   const criteria = [
     {
@@ -28,7 +30,7 @@ const token = searchParams.get("token");
     },
     {
       label: "Password must contain at least one special character",
-      test: (pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+      test: (pwd) => /[!@#$%^&*(),.?\":{}|<>]/.test(pwd),
     },
   ];
 
@@ -36,49 +38,47 @@ const token = searchParams.get("token");
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  setError("");
-
-  if (!uid || !token) {
-    setError("Reset link is invalid or expired.");
-    return;
-  }
 
   if (password !== confirmPassword) {
-    setError("Passwords do not match.");
+    alert("Passwords do not match.");
     return;
   }
 
   if (unmetCriteria.length > 0) {
-    setError("Please meet all password requirements.");
+    alert("Please meet all password requirements.");
+    return;
+  }
+
+  if (!uid || !token) {
+    alert("Invalid or expired reset link.");
     return;
   }
 
   try {
-    const response = await fetch("http://localhost:8000/auth/password-reset/complete/", {
-      method: "PATCH", // <-- THIS IS THE PATCH METHOD
+    const res = await fetch("http://localhost:8000/users/password-reset-confirm/", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        uidb64: uid,             // <- uid from query string
-        token: token,            // <- token from query string
-        password: password,      // <- new password
+        uid,
+        token,
+        new_password: password,
       }),
     });
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!response.ok) {
-      setError(data.detail || "Failed to reset password.");
+    if (!res.ok) {
+      alert(data.detail || "Something went wrong. Please try again.");
     } else {
-      setSuccess(true);
-      setTimeout(() => navigate("/login"), 3000);
+      alert("Password updated successfully. You can now log in.");
+      navigate("/login"); // redirect to login page
     }
   } catch (err) {
-    setError("Network error. Please try again.");
+    alert("Network error. Please try again.");
   }
 };
-
 
   return (
     <div className="set-password-container">
@@ -92,7 +92,7 @@ const handleSubmit = async (e) => {
 
         <form onSubmit={handleSubmit} className="set-password-form">
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Enter new password"
             value={password}
             onFocus={() => setShowCriteria(true)}
@@ -101,7 +101,7 @@ const handleSubmit = async (e) => {
           />
 
           {showCriteria && unmetCriteria.length > 0 && (
-            <ul>
+            <ul className="password-criteria">
               {unmetCriteria.map((item, index) => (
                 <li key={index}>{item.label}</li>
               ))}
@@ -109,17 +109,31 @@ const handleSubmit = async (e) => {
           )}
 
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Confirm new password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
 
-          <button type="submit">Set Password</button>
+          <div className="show-password-toggle">
+            <input
+              type="checkbox"
+              id="showPassword"
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+            />
+            <label htmlFor="showPassword">Show Password</label>
+          </div>
+
+          <button type="submit" className="submit-btn">
+            Set Password
+          </button>
         </form>
 
-        <Link to="/login">Back to Login</Link>
+        <Link to="/login" className="back-to-login">
+          Back to Login
+        </Link>
       </div>
     </div>
   );

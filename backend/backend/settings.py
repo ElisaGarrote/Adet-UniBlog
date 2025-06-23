@@ -162,7 +162,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")  # <- match Gmail
 
 # Where should the email link land?
-FRONTEND_RESET_URL = os.getenv("FRONTEND_RESET_URL", "http://localhost:5173/reset-password")
+FRONTEND_RESET_URL = os.getenv("FRONTEND_RESET_URL", "http://localhost:5173/setnewpassword")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

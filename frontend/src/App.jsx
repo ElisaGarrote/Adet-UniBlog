@@ -1,20 +1,19 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Userlogin from './pages/Userlogin.jsx';  
-import ResetPassword from './pages/ResetPass.jsx';
-import SetNewPassword from './pages/SetNewPass.jsx';
-import Recommend from './pages/Reader/Recommend.jsx';
-import NavBar from './components/NavBar.jsx';
-import Signup from './pages/SignUp.jsx';
-import Tagsblog from './pages/Reader/TagBlog.jsx';
-import Latestblog from './pages/Reader/LatestBlog.jsx';
-import ReaderProfile from './pages/Reader/ReaderProfile.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Userlogin from './pages/Userlogin.jsx';                          //  userlogin for everyone (admin, reader, writer)
+import ResetPassword from './pages/ResetPass.jsx';                      //  reset password for everyone (admin, reader, writer)
+import SetNewPassword from './pages/SetNewPass.jsx';                    //  reset password for everyone after giving the email
+import Recommend from './pages/Reader/Recommend.jsx';                   //  reader's recommendation page
+import NavBar from './components/Navbar.jsx';                           //  reader's navigation bar
+import Signup from './pages/SignUp.jsx';                                //  reader's signup
+import Tagsblog from './pages/Reader/TagBlog.jsx';                      //  reader's tags
+import Latestblog from './pages/Reader/LatestBlog.jsx';                 //  reader's latest blog
+import ReaderProfile from './pages/Reader/ReaderProfile.jsx';           //  reader's profile
+import ProtectedRoute from './components/ProtectedRoute.jsx';           //  protected route( for routing with tokens)
+import ProfileCard from './components/ProfileCard';                     //  reader's profile card(placeholder)
+import ChangePass from './components/ChangePass';                       //  reader's change password(can be used for everyone)
+import UpdateProfilePage from './components/UpdateProfile.jsx';               // readers profile
 
-import ProfileCard from './components/ProfileCard';
-import EditProfile from './components/EditProfile';
-import ChangePass from './components/ChangePass';
-import UpdateProfilePage from './components/EditProfile';
-
+//logout function for all
 function Logout(){
   localStorage.clear();
   return <Navigate to="/login" />;
@@ -31,9 +30,9 @@ function AppWrapper() {
       {!hideNav && <NavBar />}
       <Routes>
   {/* Public Routes */}
-  <Route path="/" element={<Navigate to="/login" replace />} />
-  <Route path="/login" element={<Userlogin />} />
-  <Route path="/signup" element={<Signup />} />
+  <Route path="/" element={<Navigate to="/login" replace />} /> {/*when user opens the website, it automatically redirects to login  */}
+  <Route path="/login" element={<Userlogin />} /> {/*login landing page */}
+  <Route path="/signup" element={<Signup />} /> {/*signup  */}
   <Route path="/resetpassword" element={<ResetPassword />} />
   <Route path="/setnewpassword" element={<SetNewPassword />} />
   
@@ -51,7 +50,7 @@ function AppWrapper() {
     <ProtectedRoute><ReaderProfile /></ProtectedRoute>
   } />
 
-  {/* ✅ New Protected Routes for Profile Actions */}
+  {/* New Protected Routes for Profile Actions */}
   <Route path="/updateprofile" element={
     <ProtectedRoute><UpdateProfilePage /></ProtectedRoute>
   } />

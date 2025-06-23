@@ -27,9 +27,7 @@ const UpdateProfilePage = () => {
 
         if (!res.ok) {
           throw new Error('Failed to load user data');
-          const errorData = await res.json();
-  console.error("Backend error:", errorData);
-  throw new Error('Failed to load user data');
+        
         }
 
         const data = await res.json();
@@ -83,6 +81,7 @@ const UpdateProfilePage = () => {
       } else {
         alert('Profile updated successfully!');
         navigate(-1);
+        setTimeout(() => window.location.reload(), 100); // reload after slight delay
       }
     } catch (error) {
       console.error(error);
