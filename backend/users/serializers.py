@@ -48,6 +48,12 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+    def get_profilepic(self, obj):
+        request = self.context.get("request")
+        if obj.profilepic:
+            return request.build_absolute_uri(obj.profilepic.url) if request else obj.profilepic.url
+        return None
+    
 
 class PasswordResetRequestSerializer(serializers.Serializer):
     username = serializers.EmailField()        # username == email in your system
