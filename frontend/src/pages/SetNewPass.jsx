@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logo from "../assets/icons/uniblog.svg"; // Adjust path if needed
+import logo from "../assets/icons/uniblog.svg";
+import "../styles/SetNewPass.css";
 
 function SetNewPass() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showCriteria, setShowCriteria] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const criteria = [
     {
@@ -55,35 +58,57 @@ function SetNewPass() {
         <h2 className="set-password-title">Set New Password</h2>
 
         <form onSubmit={handleSubmit} className="set-password-form">
-          <input
-            type="password"
-            placeholder="Enter new password"
-            value={password}
-            onFocus={() => setShowCriteria(true)}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-input-group">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter new password"
+              value={password}
+              onFocus={() => setShowCriteria(true)}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
           {showCriteria && unmetCriteria.length > 0 && (
-            <ul>
+            <ul className="password-criteria">
               {unmetCriteria.map((item, index) => (
                 <li key={index}>{item.label}</li>
               ))}
             </ul>
           )}
 
-          <input
-            type="password"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+          <div className="password-input-group">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
+          </div>
 
-          <button type="submit">Set Password</button>
+          <button type="submit" className="submit-btn">
+            Set Password
+          </button>
         </form>
 
-        <Link to="/login">Back to Login</Link>
+        <Link to="/login" className="back-to-login">
+          Back to Login
+        </Link>
       </div>
     </div>
   );

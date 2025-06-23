@@ -9,6 +9,7 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showCriteria, setShowCriteria] = useState(false);
 
   const criteria = [
@@ -89,7 +90,7 @@ function Signup() {
                   className="password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  <i className={`fa-solid ${showPassword ? "fa-light fa-eye-slash" : "fa-light fa-eye"}`}></i>
+                  <i className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
                 </button>
               </div>
 
@@ -103,15 +104,22 @@ function Signup() {
                 </div>
               )}
 
-              <div className="input-group">
+              <div className="input-group password-group">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="input-field"
                   required
                 />
+                <button
+                  type="button"
+                  className="password-toggle"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  <i className={`fa-solid ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                </button>
               </div>
 
               <button type="submit" className="login-button">
