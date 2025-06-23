@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Add this import
+import { useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
 import "../styles/BlogCardWriter.css";
 
 const BlogCardWriter = ({ blog, onDeleteBlog }) => {
-  const { id, title, tags, image, updatedAt, viewCount, saveCount } = blog;
+  const { id, title, tags, image, updatedAt, viewCount, saveCount, status = "draft" } = blog;
   const [showConfirm, setShowConfirm] = useState(false);
-  const navigate = useNavigate(); // Initialize the navigate function
+  const navigate = useNavigate();
 
   const handleDeleteClick = () => {
     setShowConfirm(true);
@@ -22,7 +22,7 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
   };
 
   const handleEditClick = () => {
-    navigate("/updateblog"); // Simple navigation without data
+    navigate("/updateblog");
   };
 
   return (
@@ -47,16 +47,21 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
           </div>
         </div>
 
-        <div className="writer-blog-actions">
-          <button
-            className="writer-view-button"
-            onClick={handleEditClick}
-          >
-            Edit
-          </button>
-          <button className="writer-delete-button" onClick={handleDeleteClick}>
-            Delete
-          </button>
+        <div className="writer-blog-right-section">
+          <span className={`writer-blog-status ${status}`}>
+            {status}
+          </span>
+          <div className="writer-blog-actions">
+            <button
+              className="writer-view-button"
+              onClick={handleEditClick}
+            >
+              Edit
+            </button>
+            <button className="writer-delete-button" onClick={handleDeleteClick}>
+              Delete
+            </button>
+          </div>
         </div>
       </div>
 
