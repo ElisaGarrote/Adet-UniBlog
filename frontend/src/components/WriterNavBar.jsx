@@ -12,8 +12,8 @@ function WriterNavbar() {
 
   // Sample categories for navigation
   const browseCategories = [
-    { name: "All Blog", path: "" },
-    { name: "Flagged Blog", path: "" },
+    { name: "All Blog", path: "/allblog" },
+    { name: "Flagged Blog", path: "/allflagblog" },
   ];
 
   // Close dropdowns when clicking outside
@@ -88,7 +88,7 @@ function WriterNavbar() {
           />
           {showProfileDropdown && (
             <div className="dropdown-menu profile-dropdown">
-              <Link to="/profile" className="dropdown-item" onClick={() => setShowProfileDropdown(false)}>Profile</Link>
+              <Link to="/writerprofile" className="dropdown-item" onClick={() => setShowProfileDropdown(false)}>Profile</Link>
               <Link to="/notification" className="dropdown-item" onClick={() => setShowProfileDropdown(false)}>Notification</Link>
               <Link to="/logout" className="dropdown-item-logout" onClick={() => setShowProfileDropdown(false)}>Logout</Link>
             </div>

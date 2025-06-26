@@ -1,0 +1,79 @@
+/* Filter Options - Compact Version */
+.filter-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: flex-start; /* Align dropdowns to top */
+}
+
+.filter-options select {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  width: 180px; /* Fixed width for dropdowns */
+  max-width: 100%; /* Ensure it doesn't overflow on mobile */
+}
+
+.filter-options select:hover {
+  border-color: #b0b0b0;
+}
+
+.filter-options select:focus {
+  outline: none;
+  border-color: #888;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {  /* Fixed breakpoint from 1px to 768px */
+  .filter-options {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    align-items: stretch; /* Full width on mobile */
+  }
+  
+  .filter-options select {
+    width: 100%; /* Full width on mobile */
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Loading Spinner (unchanged) */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.loading-spinner .spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-blogs-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}

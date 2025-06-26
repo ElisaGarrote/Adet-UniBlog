@@ -22,6 +22,10 @@ import WriterDashboard from './pages/Writer/WriterDashboard.jsx';
 import WriteBlogPage from './pages/Writer/WriteBlogPage.jsx';
 import WriteBlog from './pages/Writer/WriteBlog.jsx';
 import EditBlog from './pages/Writer/EditBlog.jsx';
+import AllBlogsPage from './pages/Writer/AllBlogPage.jsx';
+import AllFlagBlog from './pages/Writer/AllFlagBlogs.jsx';
+import WriterProfile from './pages/Writer/WriterProfile.jsx';
+import WriterNotificationsPage from './pages/Writer/WriterNotification.jsx';
 
 function AppWrapper() {
   const location = useLocation();
@@ -78,6 +82,12 @@ function AppWrapper() {
         <Route path="/writeblogpage" element={<WriteBlogPage />} />
         <Route path="/writeblog" element={<WriteBlog />} />
         <Route path="/updateblog" element={<EditBlog />} />
+        <Route path="/allblog" element={<AllBlogsPage />} />
+        <Route path="/allflagblog" element={<AllFlagBlog />} />
+        <Route path="/writerprofile" element={<WriterProfile />} />
+        <Route path="/writernotification" element={<WriterNotificationsPage />} />
+
+
 
 
       </Routes>

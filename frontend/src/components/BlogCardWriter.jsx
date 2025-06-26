@@ -32,10 +32,15 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
         <img src={image} alt={title} className="writer-blog-image" />
 
         <div className="writer-blog-content">
-          <h3 className="writer-blog-title">{title}</h3>
-          <div className="writer-blog-tags">
+          <div className="writer-blog-header">
+            <h3 className="writer-blog-title">{title}</h3>
+            <span className={`writer-blogs-status ${status}`}>
+              {status}
+            </span>
+          </div>
+          <div className="writer-blogs-tags">
             {tags.map((tag, index) => (
-              <span key={index} className="writer-tag">
+              <span key={index} className="writer-tagss">
                 {tag}
               </span>
             ))}
@@ -47,21 +52,16 @@ const BlogCardWriter = ({ blog, onDeleteBlog }) => {
           </div>
         </div>
 
-        <div className="writer-blog-right-section">
-          <span className={`writer-blog-status ${status}`}>
-            {status}
-          </span>
-          <div className="writer-blog-actions">
-            <button
-              className="writer-view-button"
-              onClick={handleEditClick}
-            >
-              Edit
-            </button>
-            <button className="writer-delete-button" onClick={handleDeleteClick}>
-              Delete
-            </button>
-          </div>
+        <div className="writer-blog-actions">
+          <button
+            className="writer-view-button"
+            onClick={handleEditClick}
+          >
+            Edit
+          </button>
+          <button className="writer-delete-button" onClick={handleDeleteClick}>
+            Delete
+          </button>
         </div>
       </div>
 

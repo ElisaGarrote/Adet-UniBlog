@@ -36,14 +36,15 @@
   color: #333;
 }
 
-.writer-blog-tags {
+.writer-blogs-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 12px;
+  margin-top: 12px;
 }
 
-.writer-tag {
+.writer-tagss {
   background: #f0f0f0;
   padding: 0.3rem 0.6rem;
   font-family: 'Epilogue', sans-serif;
@@ -191,7 +192,7 @@
   min-width: 150px;
 }
 
-.writer-blog-status {
+.writer-blogs-status {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.75rem;
@@ -200,12 +201,12 @@
   margin-bottom: 1rem;
 }
 
-.writer-blog-status.draft {
+.writer-blogs-status.draft {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-.writer-blog-status.published {
+.writer-blogs-status.published {
   background-color: #dcfce7;
   color: #166534;
 }
