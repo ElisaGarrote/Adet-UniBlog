@@ -4,7 +4,7 @@ import FlagBlogCard from "../../components/FlagBlogCard";
 import Pagination from "../../components/Pagination";
 import Footer from "../../components/Footer";
 import "../../styles/AllFlagBlog.css";
-import SamplePic from "../../assets/img/SamplePic.jpg";
+import SamplePic from "../../assets/img/samplepic.jpg";
 
 const AllFlagBlog = () => {
   const [flaggedBlogs, setFlaggedBlogs] = useState([]);
