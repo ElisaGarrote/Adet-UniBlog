@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model 
 from rest_framework import generics, status
-from .serializers import UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, ChangePasswordSerializer
+from .serializers import UserSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, ChangePasswordSerializer, CustomTokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.permissions import BasePermission
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from django.utils.encoding import smart_str,force_str, smart_bytes, DjangoUnicodeDecodeError
 from rest_framework.response import Response
@@ -18,6 +19,9 @@ from rest_framework.views import APIView
 
 
 User = get_user_model()
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()

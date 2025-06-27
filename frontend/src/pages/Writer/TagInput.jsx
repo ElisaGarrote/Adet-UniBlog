@@ -1,6 +1,7 @@
+import { useState, useEffect } from "react";
 import { FaChevronDown, FaTimes } from "react-icons/fa";
-import { useEffect } from "react";
 import "../../styles/TagInput.css";
+import api from "../../api"; // Your axios instance
 
 const TagInput = ({ 
   tags, 
@@ -8,10 +9,27 @@ const TagInput = ({
   tagInput, 
   setTagInput, 
   showTagDropdown, 
-  setShowTagDropdown,
-  filteredTags,
-  registeredTags
+  setShowTagDropdown 
 }) => {
+  const [registeredTags, setRegisteredTags] = useState([]);
+  const [filteredTags, setFilteredTags] = useState([]);
+
+  // Fetch tags from backend when component mounts
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await api.get("/blogs/tags/");
+        const tagNames = response.data.map(tag => tag.name);
+        setRegisteredTags(tagNames);
+        setFilteredTags(tagNames);
+      } catch (err) {
+        console.error("Failed to fetch tags:", err);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
   const handleAddTag = (tag) => {
     if (tags.length < 5 && !tags.includes(tag)) {
       setTags([...tags, tag]);
@@ -24,6 +42,21 @@ const TagInput = ({
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
+  const handleSearch = (e) => {
+    const search = e.target.value.toLowerCase();
+    setTagInput(e.target.value);
+
+    if (search === "") {
+      setFilteredTags(registeredTags);
+    } else {
+      setFilteredTags(
+        registeredTags.filter(tag =>
+          tag.toLowerCase().includes(search)
+        )
+      );
+    }
+  };
+
   return (
     <div className="w-form-group">
       <div className="w-tags-input-group">
@@ -31,7 +64,7 @@ const TagInput = ({
           <input
             type="text"
             value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
+            onChange={handleSearch}
             onFocus={() => setShowTagDropdown(true)}
             placeholder="Search and select tags (max 5)"
             className="w-tag-input"
@@ -44,7 +77,7 @@ const TagInput = ({
             <FaChevronDown />
           </button>
         </div>
-        
+
         {showTagDropdown && (
           <div className="w-tag-dropdown">
             {filteredTags.length > 0 ? (
@@ -66,11 +99,11 @@ const TagInput = ({
           </div>
         )}
       </div>
-      
+
       <div className="w-tag-list">
         {tags.map(tag => (
           <span key={tag} className="w-tag">
-            {tag} 
+            {tag}
             <button 
               onClick={() => handleRemoveTag(tag)}
               className="w-remove-tag-btn"
@@ -80,6 +113,7 @@ const TagInput = ({
           </span>
         ))}
       </div>
+
       {tags.length >= 5 && <p className="w-tag-limit-message">Maximum 5 tags reached</p>}
     </div>
   );

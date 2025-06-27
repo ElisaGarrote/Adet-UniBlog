@@ -3,19 +3,15 @@ import { Link } from "react-router-dom";
 import "../styles/NavBar.css";
 import logo from "../assets/icons/uniblog.svg";
 import pfp from "../assets/img/default-profile.png"; // fallback image
-
+import api from "../api";
 function NavBar() {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showBrowseDropdown, setShowBrowseDropdown] = useState(false);
   const [profileImage, setProfileImage] = useState(pfp);
   const [user, setUser] = useState(null);
+  const [tags, setTags] = useState([]);
+  const [loadingTags, setLoadingTags] = useState(false);
   const dropdownRef = useRef(null);
-
-  const browseCategories = [
-    { name: "Study Tips", path: "/tags" },
-    { name: "Web Development", path: "/webdev" },
-    { name: "CommITs", path: "/commits" },
-  ];
 
 useEffect(() => {
   const fetchUser = async () => {
@@ -61,7 +57,21 @@ useEffect(() => {
     }
   };
 
+  const fetchTags = async () => {
+    setLoadingTags(true);
+    try {
+      const response = await api.get("/blogs/tags/");
+      setTags(response.data || []);
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      setTags([]);
+    } finally {
+      setLoadingTags(false);
+    }
+  };
+
   fetchUser();
+  fetchTags();
 }, []);
 
   // Close dropdown on outside click
@@ -91,17 +101,23 @@ useEffect(() => {
         >
           <span className="nav-link">Browse</span>
           {showBrowseDropdown && (
-            <div className="dropdown-menu browse-dropdown">
-              {browseCategories.map((category) => (
-                <Link
-                  key={category.path}
-                  to={category.path}
-                  className="dropdown-item"
-                  onClick={() => setShowBrowseDropdown(false)}
-                >
-                  {category.name}
-                </Link>
-              ))}
+            <div className={`dropdown-menu browse-dropdown ${tags.length > 10 ? 'scrollable' : ''}`}>
+              {loadingTags ? (
+                <div className="dropdown-item loading">Loading tags...</div>
+              ) : tags.length === 0 ? (
+                <div className="dropdown-item">No tags available</div>
+              ) : (
+                tags.map((tag) => (
+                  <Link
+                    key={tag.id}
+                    to={`/tags/${tag.name}`}
+                    className="dropdown-item"
+                    onClick={() => setShowBrowseDropdown(false)}
+                  >
+                    {tag.name}
+                  </Link>
+                ))
+              )}
             </div>
           )}
         </div>

@@ -1,0 +1,176 @@
+/* WriterNotifications.css */
+.writer-notifications-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+}
+
+.writer-notifications-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 200px); /* Adjust based on your header/footer height */
+}
+
+.writer-notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.writer-notifications-header h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.notification-bell {
+  color: #4a6fa5;
+}
+
+.writer-notification-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.writer-mark-all-read,
+.writer-clear-all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.writer-mark-all-read {
+  background: #4a6fa5;
+  color: white;
+}
+
+.writer-mark-all-read:hover:not(:disabled) {
+  background: #3a5a8f;
+}
+
+.writer-clear-all {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.writer-clear-all:hover:not(:disabled) {
+  background: #e0e0e0;
+}
+
+.writer-mark-all-read:disabled,
+.writer-clear-all:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.writer-notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 250px); /* Adjust based on your layout */
+  padding-right: 8px; /* Space for scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #4a6fa5 #f0f0f0;
+}
+
+/* Custom scrollbar for webkit browsers */
+.writer-notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.writer-notifications-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.writer-notifications-list::-webkit-scrollbar-thumb {
+  background-color: #4a6fa5;
+  border-radius: 3px;
+}
+
+.writer-notifications-list::-webkit-scrollbar-thumb:hover {
+  background-color: #3a5a8f;
+}
+
+.writer-empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.writer-empty-state p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.writer-empty-state small {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.writer-action-feedback {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.writer-action-feedback.visible {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .writer-notifications-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .writer-notification-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .writer-mark-all-read,
+  .writer-clear-all {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .writer-notifications-container {
+    height: auto;
+    max-height: none;
+  }
+
+  .writer-notifications-list {
+    max-height: none;
+    overflow-y: visible;
+  }
+}

@@ -24,7 +24,32 @@ const handleLogin = async (e) => {
     localStorage.setItem(ACCESS_TOKEN, data.access);
     localStorage.setItem(REFRESH_TOKEN, data.refresh);
 
-    navigate("/recommendation"); // protected route
+    // Decode JWT token to get user info including role
+    const tokenPayload = JSON.parse(atob(data.access.split('.')[1]));
+    console.log("Login token payload:", tokenPayload);
+    
+    // Try different possible field names for user role
+    const userRole = tokenPayload.user_role || tokenPayload.role;
+    console.log("User role from login:", userRole);
+    
+    // Role-based navigation
+    switch(userRole) {
+      case 'admin':
+        navigate("/admin-dashboard");
+        break;
+      case 'reader':
+        navigate("/latestblog");
+        break;
+      case 'writer':
+        navigate("/allblog");
+        break;
+      default:
+        console.error("Unknown or missing role:", userRole);
+        console.log("Full token payload:", tokenPayload);
+        alert("User role not found. Please contact administrator.");
+        // Don't navigate anywhere, stay on login
+        return;
+    }
   } catch (err) {
     console.error("Login failed:", err);
     alert("Invalid email or password");

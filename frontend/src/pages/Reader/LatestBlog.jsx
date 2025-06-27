@@ -1,84 +1,169 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-//import Navbar from '../../components/Navbar';
-//import Footer from '../../components/Footer'; // Uncommented and corrected path
 import BlogGrid from '../../components/BlogGrid';
 import NoRecommendations from '../../components/NoRecommendation';
-import "../../styles/Recommendation.css"; // Corrected path
+import "../../styles/Recommendation.css";
 import Footer from '../../components/Footer';
 import Pagination from '../../components/Pagination';
-import SamplePic from '../../assets/img/samplepic.jpg';
-import SamplePic2 from '../../assets/img/samplepic2.jpg';
-import SamplePic3 from '../../assets/img/samplepic3.webp';
-import SamplePic4 from '../../assets/img/samplepic4.jpeg';
-import SamplePic5 from '../../assets/img/samplepic5.jpg';
-import SamplePic6 from '../../assets/img/samplepic6.jpeg';
-
-// Mock data
-const mockBlogs = [
-  {
-    id: 1,
-    title: 'The Future of AI in Education',
-    author: 'Jane Smith',
-    tags: ['AI', 'Education', 'Technology'],
-    image: SamplePic
-  },
-  {
-    id: 2,
-    title: 'Modern Web Development Trends',
-    author: 'John Doe',
-    tags: ['Web', 'Development', 'JavaScript'],
-    image: SamplePic2
-  },
-  {
-    id: 3,
-    title: 'Sustainable Tech Solutions',
-    author: 'Emma Johnson',
-    tags: ['Sustainability', 'Green Tech'],
-    image: SamplePic3
-  },
-  {
-    id: 4,
-    title: 'The Psychology of UX Design',
-    author: 'Michael Chen',
-    tags: ['UX', 'Design', 'Psychology'],
-    image: SamplePic4
-  },
-  {
-    id: 5,
-    title: 'Blockchain Beyond Cryptocurrency',
-    author: 'Sarah Williams',
-    tags: ['Blockchain', 'Technology'],
-    image: SamplePic5
-  },
-  {
-    id: 6,
-    title: 'Data Privacy in 2023',
-    author: 'David Kim',
-    tags: ['Privacy', 'Security', 'Data'],
-    image: SamplePic6
-  }
-];
+import api from '../../api';
 
 const Latestblog = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 12; // Show 12 blogs per page
+
+  useEffect(() => {
+    const fetchPublishedBlogs = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch all blogs from the API
+        const response = await api.get("/blogs/blogs/");
+        const allBlogs = response.data;
+
+        // Filter for only published blogs (not drafts)
+        const publishedBlogs = allBlogs.filter(blog => !blog.is_draft);
+
+        // Sort by creation date (newest first)
+        const sortedBlogs = publishedBlogs.sort((a, b) => 
+          new Date(b.created_at || b.updatedAt || b.updated_at) - 
+          new Date(a.created_at || a.updatedAt || a.updated_at)
+        );
+
+        // Fetch author details for each blog
+        const blogsWithAuthors = await Promise.all(
+          sortedBlogs.map(async (blog) => {
+            let authorName = `User ${blog.author}`;
+            
+            console.log("Blog author ID:", blog.author); // Debug log
+            
+            try {
+              // Fetch author details from users API - correct endpoint
+              const authorResponse = await api.get(`/users/list/${blog.author}/`);
+              const authorData = authorResponse.data;
+              
+              console.log("Author data received:", authorData); // Debug log
+              
+              // Combine first name and last name
+              const firstName = authorData.first_name || '';
+              const lastName = authorData.last_name || '';
+              const fullName = `${firstName} ${lastName}`.trim();
+              
+              authorName = fullName || authorData.username || `User ${blog.author}`;
+              
+              console.log("Final author name:", authorName); // Debug log
+            } catch (error) {
+              console.error(`Failed to fetch author details for user ${blog.author}:`, error);
+              // Keep default name if fetch fails
+            }
+
+            return {
+              ...blog,
+              authorName
+            };
+          })
+        );
+
+        // Format blogs for BlogGrid component
+        const formattedBlogs = blogsWithAuthors.map(blog => {
+          const imageUrl = blog.image || blog.blog_img;
+          let fullImageUrl = null;
+          
+          if (imageUrl) {
+            if (imageUrl.startsWith('http')) {
+              fullImageUrl = imageUrl;
+            } else {
+              const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+              fullImageUrl = imageUrl.startsWith('/') 
+                ? `${baseUrl}${imageUrl}` 
+                : `${baseUrl}/${imageUrl}`;
+            }
+          }
+
+          return {
+            id: blog.id,
+            title: blog.title || blog.blog_title || 'Untitled Blog',
+            author: blog.authorName || `User ${blog.author}`,
+            tags: Array.isArray(blog.tags) 
+              ? blog.tags.map(tag => typeof tag === 'string' ? tag : tag.name || tag)
+              : [],
+            image: fullImageUrl,
+            description: blog.blog_desc ? blog.blog_desc.substring(0, 150) + '...' : '',
+            createdAt: blog.created_at || blog.updatedAt || blog.updated_at,
+            viewCount: blog.viewCount || blog.views_count || 0
+          };
+        });
+
+        setBlogs(formattedBlogs);
+      } catch (error) {
+        console.error("Error fetching published blogs:", error);
+        setError("Failed to load blogs. Please try again later.");
+        setBlogs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPublishedBlogs();
+  }, []);
+
+  // Pagination calculations
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const totalPages = Math.ceil(blogs.length / blogsPerPage);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="recommendation-page">
       <main className="recommendation-container">
         <h1>Latest Blog</h1>
         <p className="subtitle">Here are the latest blogs for you</p>
         
-        <BlogGrid blogs={mockBlogs} />
+        {loading ? (
+          <div className="loading-container">
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Loading latest blogs...</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="error-container">
+            <p className="error-message">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="retry-button"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : blogs.length === 0 ? (
+          <NoRecommendations message="No published blogs available at the moment." />
+        ) : (
+          <>
+            <BlogGrid blogs={currentBlogs} />
+            
+            {totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </>
+        )}
         
         <div className="view-more-container">
-          <Link to="/latestblog" className="view-more-button">
-            View Latest Blogs
+          <Link to="/recommendation" className="view-more-button">
+            View Recommendations
           </Link>
         </div>
-        {/* Your blog content here */}
-        <Pagination 
-           
-        />
-        
       </main>
       <Footer />
     </div>

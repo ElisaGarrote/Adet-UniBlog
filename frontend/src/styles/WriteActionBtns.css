@@ -1,0 +1,60 @@
+.w-action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.w-save-draft-btn, .w-publish-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.w-save-draft-btn {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.w-save-draft-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.w-publish-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.w-publish-btn:hover {
+  background-color: #2563eb;
+}
+
+/* Medium screens and up */
+@media (min-width: 768px) {
+  .w-action-buttons {
+    gap: 1.5rem;
+  }
+  
+  .w-save-draft-btn, .w-publish-btn {
+    padding: 0.875rem 2rem;
+    font-size: 1.125rem;
+  }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .w-action-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  .w-save-draft-btn, .w-publish-btn {
+    width: 100%;
+    padding: 0.875rem 1rem;
+  }
+}

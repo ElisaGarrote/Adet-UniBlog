@@ -4,8 +4,9 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute({ children, allowedRoles = [] }) {
   const [isAuthorized, setIsAuthorized] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     auth().catch(() => setIsAuthorized(false));
@@ -13,14 +14,27 @@ function ProtectedRoute({ children }) {
 
   const refreshToken = async () => {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+    if (!refreshToken) {
+      setIsAuthorized(false);
+      return;
+    }
+    
     try {
-      const res = await api.post("auth/token/refresh", {
+      const res = await api.post("/auth/token/refresh/", {
         refresh: refreshToken,
       });
 
       if (res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access);
-        setIsAuthorized(true); // ✔ Add this to mark auth success
+        try {
+          const decoded = jwtDecode(res.data.access);
+          const role = decoded.user_role || decoded.role || 'reader';
+          setUserRole(role);
+          setIsAuthorized(true);
+        } catch (error) {
+          console.error("Error decoding refreshed token:", error);
+          setIsAuthorized(false);
+        }
       } else {
         setIsAuthorized(false);
       }
@@ -37,22 +51,51 @@ function ProtectedRoute({ children }) {
       return;
     }
 
-    const decoded = jwtDecode(token);
-    const now = Date.now() / 1000;
+    try {
+      const decoded = jwtDecode(token);
+      const now = Date.now() / 1000;
 
-    if (decoded.exp < now) {
-      await refreshToken();
-    } else {
-      setIsAuthorized(true);
+      if (decoded.exp < now) {
+        await refreshToken();
+      } else {
+        // Try different possible field names for user role
+        const role = decoded.user_role || decoded.role || 'reader';
+        setUserRole(role);
+        setIsAuthorized(true);
+      }
+    } catch (error) {
+      console.error("Token decode error:", error);
+      setIsAuthorized(false);
     }
   };
 
-  // 👇 This part was missing!
+  const getRoleBasedRedirect = (role) => {
+    switch(role) {
+      case 'admin':
+        return '/admin-dashboard';
+      case 'reader':
+        return '/latestblog';
+      case 'writer':
+        return '/allblog';
+      default:
+        return '/login';
+    }
+  };
+
   if (isAuthorized === null) {
     return <div>Loading...</div>;
   }
 
-  return isAuthorized ? children : <Navigate to="/login" />;
+  if (!isAuthorized) {
+    return <Navigate to="/login" />;
+  }
+
+  // If specific roles are required, check if user has access
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to={getRoleBasedRedirect(userRole)} replace />;
+  }
+
+  return children;
 }
 
 export default ProtectedRoute;

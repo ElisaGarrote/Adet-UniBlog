@@ -71,7 +71,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         # You can also embed extra fields *inside* the token here:
-        token["role"] = user.user_role
+        token["user_role"] = user.user_role
+        token["user_id"] = user.id
+        token["username"] = user.username
         return token
 
     def validate(self, attrs):
