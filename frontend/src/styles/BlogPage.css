@@ -46,20 +46,44 @@
 .blog-container .blog-image-container {
   margin-bottom: 32px;
   width: 100%;
+  height: auto;
+  min-height: 350px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  .blog-container .blog-image-container {
+    min-height: 400px;
+  }
 }
 
 .blog-container .blog-image-container .blog-image {
   width: 100% !important;
-  height: 320px !important; /* Similar to Facebook cover photo height on mobile */
-  object-fit: cover;
+  height: 350px !important; /* Reduced height for better balance */
+  min-height: 350px !important;
+  object-fit: cover !important;
   border-radius: 8px;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  display: block;
+  display: block !important;
+}
+
+.blog-image {
+  width: 100% !important;
+  height: 350px !important;
+  min-height: 350px !important;
+  object-fit: cover !important;
 }
 
 @media (min-width: 768px) {
   .blog-container .blog-image-container .blog-image {
-    height: 400px !important; /* Similar to Facebook cover photo height on desktop */
+    height: 400px !important; /* Reduced from 550px to 400px on desktop */
+    min-height: 400px !important;
+  }
+  
+  .blog-image {
+    height: 400px !important;
+    min-height: 400px !important;
   }
 }
 
@@ -101,6 +125,19 @@
   object-fit: cover;
 }
 
+.author-image-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  margin-right: 16px;
+  background-color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 1.25rem;
+}
+
 .author-name2 {
   font-weight: 600;
   color: #111827;
@@ -110,7 +147,22 @@
 .publish-date {
   color: #6b7280;
   font-size: 0.875rem;
-  margin: 0;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.view-count {
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+}
+
+.date-icon, .view-icon {
+  margin-right: 6px;
+  font-size: 0.75rem;
 }
 
 /* Action Buttons Styles */
@@ -169,6 +221,95 @@
   max-width: none;
 }
 
+.blog-html-content {
+  color: #374151;
+  line-height: 1.75;
+  font-size: 1.125rem;
+}
+
+.blog-html-content p {
+  margin-bottom: 24px;
+}
+
+.blog-html-content h1,
+.blog-html-content h2,
+.blog-html-content h3,
+.blog-html-content h4,
+.blog-html-content h5,
+.blog-html-content h6 {
+  margin-top: 32px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.blog-html-content h1 {
+  font-size: 2rem;
+}
+
+.blog-html-content h2 {
+  font-size: 1.5rem;
+}
+
+.blog-html-content h3 {
+  font-size: 1.25rem;
+}
+
+.blog-html-content ul,
+.blog-html-content ol {
+  margin-bottom: 24px;
+  padding-left: 32px;
+}
+
+.blog-html-content li {
+  margin-bottom: 8px;
+}
+
+.blog-html-content blockquote {
+  border-left: 4px solid #337b7c;
+  padding-left: 16px;
+  margin: 24px 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.blog-html-content strong {
+  font-weight: 600;
+}
+
+.blog-html-content em {
+  font-style: italic;
+}
+
+.blog-html-content code {
+  background-color: #f3f4f6;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+.blog-html-content pre {
+  background-color: #f3f4f6;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 24px 0;
+}
+
+.blog-html-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.blog-html-content a {
+  color: #337b7c;
+  text-decoration: underline;
+}
+
+.blog-html-content a:hover {
+  color: #1d4ed8;
+}
+
 .blog-paragraph {
   margin-bottom: 24px;
   color: #374151;
@@ -217,6 +358,35 @@
   background-color: #1d4ed8;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Back Button Styles */
+.back-button-container {
+  margin-bottom: 24px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.back-button:hover {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.back-button-icon {
+  margin-right: 8px;
+  font-size: 0.75rem;
 }
 
 /* Modal Styles */
@@ -290,4 +460,59 @@
 
 .cancel-btn:hover {
   background-color: #f9fafb;
+}
+
+/* Loading and Error Styles */
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #337b7c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px auto;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: block;
+  aspect-ratio: 1;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-container h2 {
+  color: #dc2626;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.error-container p {
+  color: #6b7280;
+  margin-bottom: 24px;
+  font-size: 1rem;
+}
+
+.error-container .back-button {
+  background-color: #337b7c;
+  color: white;
+}
+
+.error-container .back-button:hover {
+  background-color: #1d4ed8;
 }

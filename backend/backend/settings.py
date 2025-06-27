@@ -99,14 +99,25 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#DATABASES = {
+#        'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'uniblog',         
+#        'USER': 'postgres',         
+#        'PASSWORD': 'capstone1', 
+#        'HOST': 'localhost',            
+#        'PORT': '5432',                  
+#    }
+#}
+
 DATABASES = {
-        'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'uniblog',         
-        'USER': 'postgres',         
-        'PASSWORD': 'capstone1', 
-        'HOST': 'localhost',            
-        'PORT': '5432',                  
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'OHNVtyBcJzLKGBcuBiLtvGRcuUnYzEWM',
+        'HOST': 'interchange.proxy.rlwy.net',
+        'PORT': '40799',
     }
 }
 

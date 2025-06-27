@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import HeaderImageUpload from "../../pages/Writer/HeaderImageUpload"; //for image upload
 import TagInput from "../../pages/Writer/TagInput";       //done connected to backend
@@ -8,6 +9,7 @@ import "../../styles/WriteBlog.css";
 import api from "../../api";
 
 const WriteBlog = () => {
+  const navigate = useNavigate();
   const [headerImage, setHeaderImage] = useState(null);             // Image preview
   const [headerImageFile, setHeaderImageFile] = useState(null);     // Actual file to upload
   const [tags, setTags] = useState([]);                              // Selected tag names
@@ -27,7 +29,7 @@ const WriteBlog = () => {
         res.data.forEach(tag => tagMap[tag.name] = tag.id);
         setTagMap(tagMap);
       } catch (err) {
-        console.error(" Failed to fetch tags:", err);
+        alert("Failed to fetch tags. Please try again.");
       }
     };
     fetchTags();
@@ -67,14 +69,11 @@ const WriteBlog = () => {
       });
 
       alert("Blog submitted successfully!");
-      console.log("Success response:", response.data);
+      
+      // Navigate back to the previous page after successful submission
+      navigate(-1);
     } catch (err) {
       console.error("Error submitting blog:", err);
-      if (err.response) {
-        console.error("Response data:", err.response.data);
-        console.error("Response status:", err.response.status);
-        console.error("Response headers:", err.response.headers);
-      }
       alert(`Failed to submit blog: ${err.response?.data?.detail || err.message}`);
     }
   };
@@ -103,7 +102,7 @@ const handleSaveDraft = () => {
   return (
     <div className="w-write-blog-container">
       <div className="w-write-blog-header">
-        <button className="w-back-btn" onClick={() => window.history.back()}>
+        <button className="w-back-btn" onClick={() => navigate(-1)}>
           <FaArrowLeft /> Back
         </button>
         <h2>Add New Blog</h2>

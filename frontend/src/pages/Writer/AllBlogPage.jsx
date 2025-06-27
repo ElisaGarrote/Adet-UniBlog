@@ -100,8 +100,8 @@ const AllBlogsPage = () => {
             </div>
             
             {loading ? (
-            <div className="loading-spinner">
-                <div className="spinner"></div>
+            <div className="loading-container">
+                <div className="loading-spinner"></div>
                 <p>Loading blogs...</p>
             </div>
             ) : blogs.length === 0 ? (

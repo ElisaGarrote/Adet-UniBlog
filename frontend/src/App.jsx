@@ -24,6 +24,8 @@ import AllBlogsPage from './pages/Writer/AllBlogPage.jsx';
 import AllFlagBlog from './pages/Writer/AllFlagBlogs.jsx';
 import WriterProfile from './pages/Writer/WriterProfile.jsx';
 import WriterNotificationsPage from './pages/Writer/WriterNotification.jsx';
+import SearchResults from './pages/Reader/SearchResults.jsx';           //  search results page
+import TagBrowse from './pages/Reader/TagBrowse.jsx';                   //  tag browse page
 
 //logout function for all
 function Logout(){
@@ -105,6 +107,16 @@ function AppWrapper() {
   <Route path="/latestblog" element={
     <ProtectedRoute allowedRoles={['reader']}>
       <Latestblog />
+    </ProtectedRoute>
+  } />
+  <Route path="/search" element={
+    <ProtectedRoute allowedRoles={['reader']}>
+      <SearchResults />
+    </ProtectedRoute>
+  } />
+  <Route path="/tags/:tagName" element={
+    <ProtectedRoute allowedRoles={['reader']}>
+      <TagBrowse />
     </ProtectedRoute>
   } />
   <Route path="/profile" element={

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaFlag, FaBookmark, FaArrowUp, FaEye, FaCalendarAlt, FaUser, FaRegBookmark } from 'react-icons/fa';
+import { FaFlag, FaBookmark, FaArrowUp, FaEye, FaCalendarAlt, FaUser, FaRegBookmark, FaArrowLeft } from 'react-icons/fa';
 import '../styles/BlogPage.css';
 import profilePic from "../assets/img/profilepic.jpg";
 import Footer from '../components/Footer';
@@ -70,7 +70,7 @@ const BlogContent = () => {
           ...blogData,
           image: fullImageUrl,
           title: blogData.title || blogData.blog_title,
-          content: blogData.blog_desc,
+          content: blogData.blog_desc, // Keep raw HTML content
           viewCount: blogData.views_count || 0,
           createdAt: blogData.created_at,
           updatedAt: blogData.updated_at,
@@ -148,103 +148,6 @@ const BlogContent = () => {
     });
   };
 
-  // Function to strip HTML tags and decode HTML entities
-  const stripHtmlAndDecode = (html) => {
-    if (!html) return '';
-    
-    // First, convert <br> tags to newlines before stripping HTML
-    let processedHtml = html
-      .replace(/<br\s*\/?>/gi, '\n') // Convert <br> tags to newlines
-      .replace(/<\/p>/gi, '\n\n') // Convert </p> tags to double newlines
-      .replace(/<p[^>]*>/gi, ''); // Remove <p> opening tags
-    
-    // Create a temporary div element to decode HTML entities
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = processedHtml;
-    
-    // Get the text content (this automatically strips remaining HTML tags)
-    const textContent = tempDiv.textContent || tempDiv.innerText || '';
-    
-    // Clean up extra whitespace but preserve line breaks
-    return textContent
-      .replace(/&nbsp;/g, ' ') // Replace &nbsp; with regular spaces
-      .replace(/&amp;/g, '&') // Decode common HTML entities
-      .replace(/&lt;/g, '<')
-      .replace(/&gt;/g, '>')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/[ \t]+/g, ' ') // Replace multiple spaces/tabs with single space (but keep newlines)
-      .replace(/\n\s+/g, '\n') // Remove spaces at the beginning of lines
-      .replace(/\s+\n/g, '\n') // Remove spaces at the end of lines
-      .trim();
-  };
-
-  // Function to create readable paragraphs from content
-  const formatContentIntoParagraphs = (content) => {
-    if (!content) return [];
-    
-    const cleanContent = stripHtmlAndDecode(content);
-    
-    // For lyrics or songs, treat each line as a separate paragraph
-    // Split by single line breaks to preserve the song structure
-    let paragraphs = cleanContent
-      .split(/\n/) // Split by single line breaks
-      .map(p => p.trim())
-      .filter(p => p.length > 0); // Keep non-empty lines
-    
-    // If we got good results with single line breaks, return them
-    if (paragraphs.length > 1) {
-      return paragraphs;
-    }
-    
-    // Fallback: try double line breaks for traditional paragraph content
-    paragraphs = cleanContent
-      .split(/\n\n+|\r\n\r\n+/) // Split by double line breaks
-      .map(p => p.trim())
-      .filter(p => p.length > 0);
-    
-    // If still one long paragraph, split by sections (like [Intro], [Chorus], etc.)
-    if (paragraphs.length === 1 && paragraphs[0].length > 500) {
-      const sectionSplit = paragraphs[0].split(/(\[[^\]]+\])/);
-      const formattedSections = [];
-      
-      for (let i = 0; i < sectionSplit.length; i++) {
-        const section = sectionSplit[i].trim();
-        if (section.length > 0) {
-          // If it's a section header like [Intro], [Chorus]
-          if (section.match(/^\[[^\]]+\]$/)) {
-            formattedSections.push(section);
-          } else {
-            // Split the content into smaller chunks
-            const sentences = section.split(/(?<=[.!?])\s+/);
-            let currentChunk = '';
-            
-            sentences.forEach((sentence, index) => {
-              currentChunk += sentence + ' ';
-              
-              // Create a new paragraph every 2-3 sentences or when reaching ~200 characters
-              if ((index + 1) % 2 === 0 || currentChunk.length > 200) {
-                if (currentChunk.trim()) {
-                  formattedSections.push(currentChunk.trim());
-                }
-                currentChunk = '';
-              }
-            });
-            
-            // Add any remaining content
-            if (currentChunk.trim()) {
-              formattedSections.push(currentChunk.trim());
-            }
-          }
-        }
-      }
-      
-      return formattedSections.filter(p => p.length > 0);
-    }
-    
-    return paragraphs;
-  };
-
   // Sample blog data - you can replace this with props or API data
   const blogData = blog ? {
     title: blog.title || 'Untitled Blog',
@@ -255,7 +158,7 @@ const BlogContent = () => {
       image: author?.profilePic || profilePic,
       publishDate: formatDate(blog.createdAt)
     },
-    content: blog.content ? formatContentIntoParagraphs(blog.content) : [],
+    content: blog.content, // Keep original HTML content
     viewCount: blog.viewCount || 0
   } : {
     title: "The Future of Web Development: Trends to Watch in 2025",
@@ -383,6 +286,14 @@ const BlogContent = () => {
   return (
     <>
       <div className="blog-container">
+        {/* Back Button */}
+        <div className="back-button-container">
+          <button onClick={() => navigate(-1)} className="back-button">
+            <FaArrowLeft className="back-button-icon" />
+            Back
+          </button>
+        </div>
+
         {/* Header */}
         <div className="blog-header">
           <h1 className="blog-title2">
@@ -467,12 +378,11 @@ const BlogContent = () => {
 
         {/* Blog Content */}
         <div className="blog-content">
-          {blogData.content && blogData.content.length > 0 ? (
-            blogData.content.map((paragraph, index) => (
-              <p key={index} className="blog-paragraph">
-                {paragraph}
-              </p>
-            ))
+          {blogData.content ? (
+            <div 
+              className="blog-html-content"
+              dangerouslySetInnerHTML={{ __html: blogData.content }}
+            />
           ) : (
             <p className="blog-paragraph">No content available.</p>
           )}
@@ -482,7 +392,7 @@ const BlogContent = () => {
         <div className="social-section">
           <div className="social-actions">
             <div className="read-time">
-              {blog ? Math.ceil((blog.content?.length || 0) / 1000) : 5} min read
+              {blog ? Math.ceil((blog.content?.replace(/<[^>]*>/g, '').length || 0) / 1000) : 5} min read
             </div>
           </div>
         </div>

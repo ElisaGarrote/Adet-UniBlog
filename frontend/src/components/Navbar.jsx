@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 import logo from "../assets/icons/uniblog.svg";
 import pfp from "../assets/img/default-profile.png"; // fallback image
@@ -11,7 +11,10 @@ function NavBar() {
   const [user, setUser] = useState(null);
   const [tags, setTags] = useState([]);
   const [loadingTags, setLoadingTags] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
+  const browseDropdownRef = useRef(null);
+  const navigate = useNavigate();
 
 useEffect(() => {
   const fetchUser = async () => {
@@ -71,14 +74,47 @@ useEffect(() => {
   };
 
   fetchUser();
-  fetchTags();
-}, []);
+  fetchTags();  }, []);
+
+  // Handle search functionality
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    try {
+      // Navigate to search results page with query parameter
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } catch (error) {
+      console.error("Error during search:", error);
+    }
+  };
+
+  // Handle search input changes
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  // Handle search on Enter key
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch(e);
+    }
+  };
+
+  // Handle tag browsing
+  const handleTagClick = (tagName) => {
+    navigate(`/tags/${encodeURIComponent(tagName)}`);
+    setShowBrowseDropdown(false);
+  };
 
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setShowProfileDropdown(false);
+      }
+      if (browseDropdownRef.current && !browseDropdownRef.current.contains(e.target)) {
+        setShowBrowseDropdown(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -96,10 +132,15 @@ useEffect(() => {
 
         <div
           className="nav-dropdown"
-          onMouseEnter={() => setShowBrowseDropdown(true)}
-          onMouseLeave={() => setShowBrowseDropdown(false)}
+          ref={browseDropdownRef}
         >
-          <span className="nav-link">Browse</span>
+          <span 
+            className="nav-link"
+            onClick={() => setShowBrowseDropdown(!showBrowseDropdown)}
+            style={{ cursor: 'pointer' }}
+          >
+            Browse
+          </span>
           {showBrowseDropdown && (
             <div className={`dropdown-menu browse-dropdown ${tags.length > 10 ? 'scrollable' : ''}`}>
               {loadingTags ? (
@@ -108,14 +149,14 @@ useEffect(() => {
                 <div className="dropdown-item">No tags available</div>
               ) : (
                 tags.map((tag) => (
-                  <Link
+                  <div
                     key={tag.id}
-                    to={`/tags/${tag.name}`}
                     className="dropdown-item"
-                    onClick={() => setShowBrowseDropdown(false)}
+                    onClick={() => handleTagClick(tag.name)}
+                    style={{ cursor: 'pointer' }}
                   >
                     {tag.name}
-                  </Link>
+                  </div>
                 ))
               )}
             </div>
@@ -124,7 +165,16 @@ useEffect(() => {
 
         <Link to="/latestblog" className="nav-link">Latest</Link>
 
-        <input type="text" placeholder="Search..." className="search-input" />
+        <form onSubmit={handleSearch} className="search-form">
+          <input 
+            type="text" 
+            placeholder="Search blogs, tags, authors..." 
+            className="search-input"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onKeyPress={handleSearchKeyPress}
+          />
+        </form>
       </div>
 
       {/* Right: Profile Info */}

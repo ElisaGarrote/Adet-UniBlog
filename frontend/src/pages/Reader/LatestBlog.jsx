@@ -128,10 +128,8 @@ const Latestblog = () => {
         
         {loading ? (
           <div className="loading-container">
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Loading latest blogs...</p>
-            </div>
+            <div className="loading-spinner"></div>
+            <p>Loading latest blogs...</p>
           </div>
         ) : error ? (
           <div className="error-container">
