@@ -168,7 +168,7 @@ useEffect(() => {
         <form onSubmit={handleSearch} className="search-form">
           <input 
             type="text" 
-            placeholder="Search blogs, tags, authors..." 
+            placeholder="Search" 
             className="search-input"
             value={searchQuery}
             onChange={handleSearchChange}

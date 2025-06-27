@@ -156,12 +156,6 @@ const Latestblog = () => {
             )}
           </>
         )}
-        
-        <div className="view-more-container">
-          <Link to="/recommendation" className="view-more-button">
-            View Recommendations
-          </Link>
-        </div>
       </main>
       <Footer />
     </div>

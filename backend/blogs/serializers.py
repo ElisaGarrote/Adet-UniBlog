@@ -43,3 +43,15 @@ class BlogSerializer(serializers.ModelSerializer):
             instance.tags.set(tags)
         instance.save()
         return instance
+
+class SavedBlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SavedBlog
+        fields = ['id', 'user', 'blog', 'saved_at']
+        read_only_fields = ['saved_at', 'user']  # Make user read-only since it's set in the view
+
+class ReportedBlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportedBlog
+        fields = ['id', 'user', 'blog', 'reason', 'reported_at']
+        read_only_fields = ['reported_at']

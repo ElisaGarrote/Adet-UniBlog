@@ -200,8 +200,8 @@ const BlogContent = () => {
 
     try {
       if (isSaved) {
-        // Unsave the blog
-        await api.delete(`/blogs/saved-blogs/`, { 
+        // Unsave the blog using the custom action endpoint
+        await api.delete(`/blogs/saved-blogs/remove_by_blog/`, { 
           data: { blog: parseInt(id) } 
         });
         setIsSaved(false);

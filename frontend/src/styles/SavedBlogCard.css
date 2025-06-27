@@ -56,6 +56,17 @@
   border-radius: 12px;
 }
 
+.clickable-tag {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clickable-tag:hover {
+  background-color: #337b7c;
+  color: white;
+  transform: translateY(-1px);
+}
+
 .blog-title {
   margin: 0.2rem 0;
   font-size: 1rem;
@@ -81,6 +92,7 @@
   font-family: 'Epilogue', sans-serif;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -129,5 +141,6 @@
   
   .blog-description {
     -webkit-line-clamp: 1;
+    line-clamp: 1;
   }
 }
