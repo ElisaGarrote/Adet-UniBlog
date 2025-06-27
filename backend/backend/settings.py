@@ -15,6 +15,9 @@ from datetime import timedelta
 from dotenv import load_dotenv
 import os
 
+import dj_database_url
+
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -109,16 +112,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #        'PORT': '5432',                  
 #    }
 #}
+#
+
+#    {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'railway',
+#        'USER': 'postgres',
+#        'PASSWORD': 'OHNVtyBcJzLKGBcuBiLtvGRcuUnYzEWM',
+#        'HOST': 'interchange.proxy.rlwy.net',
+#        'PORT': '40799',
+#    }
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'OHNVtyBcJzLKGBcuBiLtvGRcuUnYzEWM',
-        'HOST': 'interchange.proxy.rlwy.net',
-        'PORT': '40799',
-    }
+    'default': dj_database_url.config(conn_max_age=600)
+
 }
 
 
@@ -162,6 +169,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOWED_ORIGINS = [
+    "https://adet-uniblog-production.up.railway.app"
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
