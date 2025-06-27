@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Blog, Tag, SavedBlog, ReportedBlog
+from .models import Blog, Tag, SavedBlog, ReportedBlog, BlogView, ReadingHistory
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -19,3 +19,15 @@ class SavedBlogAdmin(admin.ModelAdmin):
 @admin.register(ReportedBlog)
 class ReportedBlogAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'blog', 'reported_at']
+
+@admin.register(BlogView)
+class BlogViewAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'blog', 'ip_address', 'viewed_at']
+    list_filter = ['viewed_at']
+    search_fields = ['user__username', 'blog__blog_title', 'ip_address']
+
+@admin.register(ReadingHistory)
+class ReadingHistoryAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'blog', 'read_at']
+    list_filter = ['read_at']
+    search_fields = ['user__username', 'blog__blog_title']

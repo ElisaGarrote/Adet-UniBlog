@@ -17,7 +17,7 @@ import SamplePic6 from '../../assets/img/samplepic6.jpeg';
 const mockBlogs = [
   {
     id: 1,
-    title: 'The Future of AI in Education',
+    title: 'The Future of AI in Education in the mfasdad',
     author: 'Jane Smith',
     tags: ['AI', 'Education', 'Technology'],
     image: SamplePic
@@ -54,7 +54,7 @@ const mockBlogs = [
     id: 6,
     title: 'Data Privacy in 2023',
     author: 'David Kim',
-    tags: ['Privacy', 'Security', 'Data'],
+    tags: ['Privacy', 'Security', 'Data', 'Commits', 'Updates'],
     image: SamplePic6
   }
 ];
@@ -67,12 +67,6 @@ const Recommend = () => {
         <p className="subtitle">Based on your reading history and interests</p>
         
         <BlogGrid blogs={mockBlogs} />
-        
-        <div className="view-more-container">
-          <Link to="/latestblog" className="view-more-button">
-            View Latest Blogs
-          </Link>
-        </div>
       </main>
       <Footer />
     </div>

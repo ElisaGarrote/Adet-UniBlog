@@ -6,21 +6,27 @@
 
 .blog-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Responsive with minimum width */
   gap: 30px;
   margin: 0 auto;
   max-width: 1200px;
 }
 
 /* Responsive adjustments */
-@media (max-width: 992px) {
+@media (max-width: 768px) {
   .blog-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Smaller minimum width on mobile */
+    gap: 20px;
+  }
+  
+  .blog-grid-container {
+    padding: 0 10px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .blog-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    gap: 15px;
   }
 }

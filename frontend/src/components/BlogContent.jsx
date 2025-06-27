@@ -15,7 +15,6 @@ const BlogContent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
-  const [viewIncremented, setViewIncremented] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -38,18 +37,15 @@ const BlogContent = () => {
         const blogResponse = await api.get(`/blogs/blogs/${id}/`);
         const blogData = blogResponse.data;
 
-        // Increment view count only once per session and only for readers
-        if (!viewIncremented && currentUser?.role === 'reader') {
-          try {
-            await api.patch(`/blogs/blogs/${id}/`, { 
-              views_count: (blogData.views_count || 0) + 1 
-            });
-            setViewIncremented(true);
-            // Update the blog data to reflect the incremented view count
-            blogData.views_count = (blogData.views_count || 0) + 1;
-          } catch (viewError) {
-            console.warn('Failed to increment view count:', viewError);
+        // Increment view count using the new endpoint
+        try {
+          const viewResponse = await api.post(`/blogs/blogs/${id}/increment_view/`);
+          if (viewResponse.data && viewResponse.data.views_count !== undefined) {
+            // Update the blog data with the current view count from the response
+            blogData.views_count = viewResponse.data.views_count;
           }
+        } catch (viewError) {
+          console.warn('Failed to increment view count:', viewError);
         }
 
         // Construct full image URL
@@ -127,7 +123,7 @@ const BlogContent = () => {
     if (id) {
       fetchBlogAndAuthor();
     }
-  }, [id, currentUser?.role, viewIncremented]);
+  }, [id]);
 
   // Show/hide back to top button based on scroll position
   useEffect(() => {

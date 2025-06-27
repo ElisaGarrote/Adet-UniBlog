@@ -4,8 +4,9 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Blog, Tag, SavedBlog, ReportedBlog
-from .serializers import BlogSerializer, TagSerializer, SavedBlogSerializer, ReportedBlogSerializer
+from django.db import transaction
+from .models import Blog, Tag, SavedBlog, ReportedBlog, BlogView, ReadingHistory
+from .serializers import BlogSerializer, TagSerializer, SavedBlogSerializer, ReportedBlogSerializer, BlogViewSerializer, ReadingHistorySerializer
 
 class BlogViewSet(viewsets.ModelViewSet):
     serializer_class = BlogSerializer
@@ -17,6 +18,80 @@ class BlogViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def get_client_ip(self, request):
+        """Get the client's IP address from the request"""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
+    def increment_view(self, request, pk=None):
+        """Increment view count for a blog, ensuring unique views per user/IP"""
+        try:
+            blog = self.get_object()
+            user = request.user if request.user.is_authenticated else None
+            ip_address = self.get_client_ip(request)
+            
+            with transaction.atomic():
+                # Check if this user/IP has already viewed this blog
+                if user:
+                    # For authenticated users, check by user
+                    view_exists = BlogView.objects.filter(user=user, blog=blog).exists()
+                else:
+                    # For anonymous users, check by IP address
+                    view_exists = BlogView.objects.filter(ip_address=ip_address, blog=blog, user__isnull=True).exists()
+                
+                if not view_exists:
+                    # Create a new view record
+                    BlogView.objects.create(
+                        user=user,
+                        blog=blog,
+                        ip_address=ip_address
+                    )
+                    
+                    # Increment the blog's view count
+                    blog.views_count += 1
+                    blog.save(update_fields=['views_count'])
+                    
+                    # For authenticated readers, also create reading history
+                    if user and hasattr(user, 'role') and user.role == 'reader':
+                        ReadingHistory.objects.get_or_create(user=user, blog=blog)
+                    
+                    return Response({
+                        'message': 'View count incremented',
+                        'views_count': blog.views_count
+                    })
+                else:
+                    return Response({
+                        'message': 'View already counted for this user/IP',
+                        'views_count': blog.views_count
+                    })
+                    
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to increment view count: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(detail=False, methods=['get'], permission_classes=[permissions.IsAuthenticated])
+    def recommendations(self, request):
+        """Get blog recommendations based on user's reading history"""
+        from .recommendation_service import get_recommendations
+        
+        try:
+            user_id = request.user.id
+            recommendations = get_recommendations(user_id)
+            serializer = self.get_serializer(recommendations, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to get recommendations: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 class TagViewSet(

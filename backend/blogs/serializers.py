@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Blog, Tag, SavedBlog, ReportedBlog
+from .models import Blog, Tag, SavedBlog, ReportedBlog, BlogView, ReadingHistory
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,3 +55,15 @@ class ReportedBlogSerializer(serializers.ModelSerializer):
         model = ReportedBlog
         fields = ['id', 'user', 'blog', 'reason', 'reported_at']
         read_only_fields = ['reported_at']
+
+class BlogViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogView
+        fields = ['id', 'user', 'blog', 'viewed_at', 'ip_address']
+        read_only_fields = ['viewed_at', 'user', 'ip_address']
+
+class ReadingHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReadingHistory
+        fields = ['id', 'user', 'blog', 'read_at']
+        read_only_fields = ['read_at', 'user']
