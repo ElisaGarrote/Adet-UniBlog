@@ -1,72 +1,101 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-//import Navbar from '../../components/Navbar';
-//import Footer from '../../components/Footer'; // Uncommented and corrected path
 import BlogGrid from '../../components/BlogGrid';
 import NoRecommendations from '../../components/NoRecommendation';
-import "../../styles/Recommendation.css"; // Corrected path
+import "../../styles/Recommendation.css";
 import Footer from '../../components/Footer';
-import SamplePic from '../../assets/img/samplepic.jpg';
-import SamplePic2 from '../../assets/img/samplepic2.jpg';
-import SamplePic3 from '../../assets/img/samplepic3.webp';
-import SamplePic4 from '../../assets/img/samplepic4.jpeg';
-import SamplePic5 from '../../assets/img/samplepic5.jpg';
-import SamplePic6 from '../../assets/img/samplepic6.jpeg';
-
-// Mock data
-const mockBlogs = [
-  {
-    id: 1,
-    title: 'The Future of AI in Education in the mfasdad',
-    author: 'Jane Smith',
-    tags: ['AI', 'Education', 'Technology'],
-    image: SamplePic
-  },
-  {
-    id: 2,
-    title: 'Modern Web Development Trends',
-    author: 'John Doe',
-    tags: ['Web', 'Development', 'JavaScript'],
-    image: SamplePic2
-  },
-  {
-    id: 3,
-    title: 'Sustainable Tech Solutions',
-    author: 'Emma Johnson',
-    tags: ['Sustainability', 'Green Tech'],
-    image: SamplePic3
-  },
-  {
-    id: 4,
-    title: 'The Psychology of UX Design',
-    author: 'Michael Chen',
-    tags: ['UX', 'Design', 'Psychology'],
-    image: SamplePic4
-  },
-  {
-    id: 5,
-    title: 'Blockchain Beyond Cryptocurrency',
-    author: 'Sarah Williams',
-    tags: ['Blockchain', 'Technology'],
-    image: SamplePic5
-  },
-  {
-    id: 6,
-    title: 'Data Privacy in 2023',
-    author: 'David Kim',
-    tags: ['Privacy', 'Security', 'Data', 'Commits', 'Updates'],
-    image: SamplePic6
-  }
-];
+import api from '../../api';
 
 const Recommend = () => {
+  const [recommendations, setRecommendations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Fetch AI-powered recommendations from backend
+        const response = await api.get('/blogs/blogs/recommendations/');
+        
+        // Transform the data to match BlogGrid expectations
+        const transformedBlogs = response.data.map(blog => ({
+          id: blog.id,
+          title: blog.title || blog.blog_title || 'Untitled Blog',
+          author: blog.author_name || 'Unknown Author',
+          tags: Array.isArray(blog.tags) 
+            ? blog.tags.map(tag => typeof tag === 'string' ? tag : tag.name || tag.tag_name || tag)
+            : [],
+          image: blog.image ? 
+            (blog.image.startsWith('http') ? blog.image : `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}${blog.image}`) 
+            : '/default-blog.jpg',
+          viewCount: blog.views_count || 0,
+          description: blog.blog_desc || 'No description available'
+        }));
+
+        setRecommendations(transformedBlogs);
+      } catch (error) {
+        console.error('Error fetching recommendations:', error);
+        setError('Failed to load recommendations. Please try again later.');
+        setRecommendations([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecommendations();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="recommendation-page">
+        <main className="recommendation-container">
+          <h1>Blog Recommendation</h1>
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+            <p>Loading personalized recommendations...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="recommendation-page">
+        <main className="recommendation-container">
+          <h1>Blog Recommendation</h1>
+          <div className="error-container">
+            <p className="error-message">{error}</p>
+            <button onClick={() => window.location.reload()} className="retry-button">
+              Try Again
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="recommendation-page">
       <main className="recommendation-container">
         <h1>Blog Recommendation</h1>
-        <p className="subtitle">Based on your reading history and interests</p>
+        <p className="subtitle">
+          {recommendations.length > 0 
+            ? "Based on your reading history and interests" 
+            : "Start reading some blogs to get personalized recommendations!"
+          }
+        </p>
         
-        <BlogGrid blogs={mockBlogs} />
+        {recommendations.length > 0 ? (
+          <BlogGrid blogs={recommendations} />
+        ) : (
+          <NoRecommendations />
+        )}
       </main>
       <Footer />
     </div>

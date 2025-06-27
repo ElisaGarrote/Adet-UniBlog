@@ -8,6 +8,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class BlogSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.id')
+    author_name = serializers.SerializerMethodField()
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True, write_only=True, required=False)
     
@@ -21,7 +22,15 @@ class BlogSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Blog
-        fields = ['id', 'author', 'title', 'image', 'blog_desc', 'tags', 'tag_ids', 'is_draft', 'viewCount', 'saveCount', 'updatedAt', 'status', 'created_at']
+        fields = ['id', 'author', 'author_name', 'title', 'image', 'blog_desc', 'tags', 'tag_ids', 'is_draft', 'viewCount', 'saveCount', 'updatedAt', 'status', 'created_at', 'views_count']
+
+    def get_author_name(self, obj):
+        if obj.author:
+            first_name = obj.author.first_name or ''
+            last_name = obj.author.last_name or ''
+            full_name = f"{first_name} {last_name}".strip()
+            return full_name or obj.author.username or f"User {obj.author.id}"
+        return "Unknown Author"
 
     def get_saveCount(self, obj):
         return obj.savedblog_set.count()
