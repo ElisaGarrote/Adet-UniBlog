@@ -2,8 +2,8 @@
 name = "uniblog-backend"
 
 [deploy]
-start = "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120"
+start = "chmod +x start.sh && ./start.sh"
 
 [env]
-DEBUG = "False"
-CORS_ALLOW_ALL_ORIGINS = "False"
+DEBUG = "True"
+CORS_ALLOW_ALL_ORIGINS = "True"
