@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import "../styles/NavBar.css";
+import "../styles/Navbar.css";
 import logo from "../assets/icons/uniblog.svg";
 import pfp from "../assets/img/default-profile.png"; // fallback image
 
