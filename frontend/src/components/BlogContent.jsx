@@ -148,7 +148,7 @@ const BlogContent = () => {
     });
   };
 
-  // Sample blog data - you can replace this with props or API data
+  // Blog data from API or fallback
   const blogData = blog ? {
     title: blog.title || 'Untitled Blog',
     tags: Array.isArray(blog.tags) ? blog.tags : [],
@@ -160,30 +160,7 @@ const BlogContent = () => {
     },
     content: blog.content, // Keep original HTML content
     viewCount: blog.viewCount || 0
-  } : {
-    title: "The Future of Web Development: Trends to Watch in 2025",
-    tags: ["Web Development", "JavaScript", "React", "Technology", "Programming"],
-    blogImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop",
-    author: {
-      name: "Sarah Johnson",
-      image: profilePic,
-      publishDate: "March 15, 2025"
-    },
-    content: [
-      "The landscape of web development continues to evolve at a breakneck pace, with new technologies and methodologies emerging constantly. As we navigate through 2025, several key trends are shaping how we build and interact with web applications.",
-      
-      "One of the most significant developments is the rise of AI-powered development tools. These tools are not just helping developers write code faster, but they're also improving code quality and helping catch potential issues before they become problems. From intelligent code completion to automated testing suggestions, AI is becoming an integral part of the development workflow.",
-      
-      "Another major trend is the continued emphasis on performance optimization. With Core Web Vitals becoming increasingly important for SEO rankings, developers are focusing more than ever on creating fast, responsive applications. This includes adopting new techniques like edge computing, advanced caching strategies, and optimized asset delivery.",
-      
-      "The component-based architecture that React popularized is now being adopted across different frameworks and even in vanilla JavaScript applications. This modular approach to building user interfaces has proven to be both scalable and maintainable, making it easier for teams to collaborate on large projects.",
-      
-      "Security remains a top priority, with new threats emerging regularly. Developers are implementing more sophisticated authentication methods, adopting zero-trust architectures, and ensuring that security is considered from the ground up rather than as an afterthought.",
-      
-      "Looking ahead, we can expect to see continued innovation in areas like WebAssembly, progressive web apps, and serverless architectures. The key for developers is to stay curious, keep learning, and adapt to these changing technologies while maintaining focus on creating great user experiences."
-    ],
-    viewCount: 0
-  };
+  } : null;
 
   const handleBackToTop = () => {
     window.scrollTo({
@@ -281,6 +258,11 @@ const BlogContent = () => {
         </button>
       </div>
     );
+  }
+
+  // Don't render if we don't have blog data
+  if (!blogData) {
+    return null;
   }
 
   return (
