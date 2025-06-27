@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/AllBlogCardWriter.css";
-import SamplePic from "../assets/img/SamplePic.jpg";
+import SamplePic from "../assets/img/samplepic.jpg";
 
 const AllBlogCardWriter = ({ blog = {}, onViewBlog }) => {
   const { 

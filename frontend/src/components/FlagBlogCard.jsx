@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "../styles/FlagBlogCard.css";
-import SamplePic from "../assets/img/SamplePic.jpg";
+import SamplePic from "../assets/img/samplepic.jpg";
 
 const FlagBlogCard = ({ blog = {}, onViewReport }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
