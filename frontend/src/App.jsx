@@ -48,6 +48,8 @@ function AppWrapper() {
   <Route path="/resetpassword" element={<ResetPassword />} />
   <Route path="/setnewpassword" element={<SetNewPassword />} />
   <Route path="/blog" element={<BlogPage />} />
+  <Route path="/blog/:id" element={<BlogPage />} />
+  <Route path="/viewblog/:id" element={<BlogPage />} />
   <Route path="/about" element={<AboutPage />} />
   <Route path="/privacypolicy" element={<PrivacyPolicy />} />
   <Route path="/privacy" element={<PrivacyPolicy />} />  

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import HeaderImageUpload from "../../pages/Writer/HeaderImageUpload"; //for image upload
 import TagInput from "../../pages/Writer/TagInput";       //done connected to backend
@@ -9,7 +8,6 @@ import "../../styles/WriteBlog.css";
 import api from "../../api";
 
 const WriteBlog = () => {
-  const navigate = useNavigate();
   const [headerImage, setHeaderImage] = useState(null);             // Image preview
   const [headerImageFile, setHeaderImageFile] = useState(null);     // Actual file to upload
   const [tags, setTags] = useState([]);                              // Selected tag names
@@ -70,10 +68,6 @@ const WriteBlog = () => {
 
       alert("Blog submitted successfully!");
       console.log("Success response:", response.data);
-      
-      // Navigate to WriteBlogPage after successful submission
-      navigate("/writeblogpage");
-      
     } catch (err) {
       console.error("Error submitting blog:", err);
       if (err.response) {
