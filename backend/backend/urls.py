@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from .media_views import debug_media
 
 def health_check(request):
     return JsonResponse({"status": "ok", "message": "Backend is running"})
@@ -41,7 +40,6 @@ def api_root(request, format=None):
 urlpatterns = [
     path("", api_root, name="api_root"),
     path("health/", health_check, name="health_check"),
-    path("debug/media/", debug_media, name="debug_media"),
     path("admin/", admin.site.urls),
     # JWT
     path("auth/", include("authenticator.urls")),

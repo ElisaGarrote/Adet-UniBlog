@@ -45,6 +45,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT',),
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -64,7 +65,6 @@ INSTALLED_APPS = [
     "users",
     "blogs",
     "rest_framework",
-    "rest_framework_simplejwt",  # Add this for JWT authentication
     "corsheaders"
 ]
 
@@ -173,12 +173,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media files
-MEDIA_URL = '/media/'          # keep this for local dev
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-if not DEBUG:                  # production only
-    BACKEND_HOST = os.getenv("BACKEND_HOST", "https://valiant-creativity-production.up.railway.app")
-    MEDIA_URL = f"{BACKEND_HOST}/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
