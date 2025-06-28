@@ -24,16 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create necessary directories and copy media files
+# Create necessary directories and collect static files
 RUN mkdir -p staticfiles
-RUN mkdir -p media/blog_images
-RUN mkdir -p media/profile_pics
-
-# Ensure media files are copied (if they exist in the build context)
-# Set permissions for media directory
-RUN chmod -R 755 media
-
-# Collect static files (skip on errors)
 RUN python manage.py collectstatic --noinput || echo "Static file collection failed, continuing..."
 
 CMD ["sh", "-c", "python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"]
