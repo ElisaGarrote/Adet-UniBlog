@@ -17,6 +17,11 @@
 
     rewrite /health /*
 
+    # NEW - pipe /media/* to the backend
+    handle_path /media/* {
+        reverse_proxy https://valiant-creativity-production.up.railway.app
+    }
+
     root * dist
 
     encode gzip
