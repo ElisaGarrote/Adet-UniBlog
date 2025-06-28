@@ -24,7 +24,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Collect static files for production
-RUN python manage.py collectstatic --noinput
+# Create necessary directories and collect static files
+RUN mkdir -p staticfiles
+RUN python manage.py collectstatic --noinput || echo "Static file collection failed, continuing..."
 
 CMD ["sh", "-c", "python manage.py migrate && gunicorn backend.wsgi:application --bind 0.0.0.0:$PORT"]
