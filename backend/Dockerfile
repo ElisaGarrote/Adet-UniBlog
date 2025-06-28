@@ -22,11 +22,11 @@ WORKDIR /app
 
 # Install only runtime dependencies from built wheels
 COPY --from=builder /wheels /wheels
-COPY backend/requirements.txt ./
+COPY requirements.txt ./
 RUN pip install --no-index --no-cache-dir --find-links /wheels -r requirements.txt
 
 # Copy application code
-COPY backend/ .
+COPY . .
 
 # Create media and static directories
 RUN mkdir -p /app/media /app/staticfiles \
@@ -36,7 +36,7 @@ RUN mkdir -p /app/media /app/staticfiles \
 RUN python manage.py collectstatic --noinput
 
 # Copy entrypoint script and make it executable
-COPY backend/start.sh /start.sh
+COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
 # Expose port (Railway uses PORT env var)
