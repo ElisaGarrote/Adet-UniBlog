@@ -24,12 +24,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create necessary directories
+# Create necessary directories and copy media files
 RUN mkdir -p staticfiles
-RUN mkdir -p media
 RUN mkdir -p media/blog_images
 RUN mkdir -p media/profile_pics
 
+# Ensure media files are copied (if they exist in the build context)
 # Set permissions for media directory
 RUN chmod -R 755 media
 

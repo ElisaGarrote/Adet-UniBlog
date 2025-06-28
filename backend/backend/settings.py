@@ -176,9 +176,18 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Allow WhiteNoise to serve media files in production (for Railway)
+# Configure WhiteNoise to serve media files in production
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_AUTOREFRESH = True
+WHITENOISE_STATIC_PREFIX = '/static/'
+
+# Add media files to static files for WhiteNoise to serve
+import os
+if not os.getenv('DEBUG', 'False').lower() == 'true':
+    # In production, add media to static files
+    STATICFILES_DIRS = [
+        BASE_DIR / 'media',
+    ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
