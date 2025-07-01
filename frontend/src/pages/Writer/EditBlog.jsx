@@ -21,6 +21,7 @@ const EditBlog = () => {
   const [isPublished, setIsPublished] = useState(false);
   const [showTagDropdown, setShowTagDropdown] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [initialContent, setInitialContent] = useState(""); // Add state for initial content
   const contentRef = useRef(null);
 
   // Fetch tag list on mount and store name => id map
@@ -51,9 +52,9 @@ const EditBlog = () => {
           setTitle(blog.title || blog.blog_title || "");
           setIsPublished(!blog.is_draft);
           
-          // Set content in rich text editor
-          if (contentRef.current && blog.blog_desc) {
-            contentRef.current.innerHTML = blog.blog_desc;
+          // Set content for rich text editor
+          if (blog.blog_desc) {
+            setInitialContent(blog.blog_desc);
           }
           
           // Set image if exists
@@ -85,6 +86,21 @@ const EditBlog = () => {
       fetchBlogData();
     }
   }, [id, navigate]);
+
+  // Set initial content in the editor after it's mounted and content is loaded
+  useEffect(() => {
+    if (!loading && initialContent && contentRef.current) {
+      // Use a small delay to ensure the editor is fully ready
+      const timer = setTimeout(() => {
+        if (contentRef.current) {
+          contentRef.current.innerHTML = initialContent;
+          console.log("Content set in editor:", initialContent.substring(0, 100) + "...");
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [loading, initialContent]);
 
   // Handle submit logic for updating the blog
   const handleSubmit = async (publish = false) => {
@@ -205,7 +221,10 @@ const EditBlog = () => {
               />
             </div>
 
-            <RichTextEditor contentRef={contentRef} />
+            <RichTextEditor 
+              contentRef={contentRef} 
+              initialContent={initialContent}
+            />
             
             <ActionButtons 
               handleSaveDraft={handleSaveDraft}

@@ -1,7 +1,8 @@
+import React, { useEffect } from "react";
 import { FaBold, FaItalic, FaListUl, FaLink } from "react-icons/fa";
 import "../../styles/RichTextEditor.css";
 
-const RichTextEditor = ({ contentRef }) => {
+const RichTextEditor = ({ contentRef, initialContent = "" }) => {
   const formatText = (command) => {
     document.execCommand(command, false, null);
   };
@@ -19,6 +20,16 @@ const RichTextEditor = ({ contentRef }) => {
       alert("Content is too long! Maximum 10,000 characters.");
     }
   };
+
+  // Set initial content when component mounts or initialContent changes
+  useEffect(() => {
+    if (contentRef.current && initialContent) {
+      // Only set if the current content is empty or different
+      if (!contentRef.current.innerHTML.trim() || contentRef.current.innerHTML !== initialContent) {
+        contentRef.current.innerHTML = initialContent;
+      }
+    }
+  }, [initialContent, contentRef]);
 
   return (
     <div className="w-form-section">
