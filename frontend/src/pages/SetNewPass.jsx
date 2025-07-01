@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import api from "../api"; // Import the API instance
 import logo from "../assets/icons/uniblog.svg";
 import "../styles/SetNewPass.css";
 
@@ -55,28 +56,21 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    const res = await fetch("http://localhost:8000/users/password-reset-confirm/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        uid,
-        token,
-        new_password: password,
-      }),
+    const response = await api.post("/users/password-reset-confirm/", {
+      uid,
+      token,
+      new_password: password,
     });
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      alert(data.detail || "Something went wrong. Please try again.");
-    } else {
-      alert("Password updated successfully. You can now log in.");
-      navigate("/login"); // redirect to login page
-    }
+    // Success case
+    alert("Password updated successfully. You can now log in.");
+    navigate("/login"); // redirect to login page
   } catch (err) {
-    alert("Network error. Please try again.");
+    if (err.response?.data) {
+      alert(err.response.data.detail || "Something went wrong. Please try again.");
+    } else {
+      alert("Network error. Please try again.");
+    }
   }
 };
 

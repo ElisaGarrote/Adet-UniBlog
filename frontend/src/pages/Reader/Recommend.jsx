@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BlogGrid from '../../components/BlogGrid';
 import NoRecommendations from '../../components/NoRecommendation';
+import Pagination from '../../components/Pagination';
 import "../../styles/Recommendation.css";
 import Footer from '../../components/Footer';
 import api from '../../api';
@@ -10,6 +11,11 @@ const Recommend = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalBlogs, setTotalBlogs] = useState(0);
+  
+  const blogsPerPage = 12; // Adjust this number as needed
 
   useEffect(() => {
     const fetchRecommendations = async () => {
@@ -17,11 +23,25 @@ const Recommend = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch AI-powered recommendations from backend
-        const response = await api.get('/blogs/blogs/recommendations/');
+        // Fetch AI-powered recommendations from backend with pagination
+        const response = await api.get(`/blogs/blogs/recommendations/?page=${currentPage}&page_size=${blogsPerPage}`);
+        
+        // Handle paginated response
+        const data = response.data;
+        const blogsList = data.results || data; // Handle both paginated and non-paginated responses
+        
+        // Update pagination info if response includes pagination data
+        if (data.count !== undefined) {
+          setTotalBlogs(data.count);
+          setTotalPages(Math.ceil(data.count / blogsPerPage));
+        } else {
+          // If no pagination info, calculate based on current data
+          setTotalBlogs(Array.isArray(blogsList) ? blogsList.length : 0);
+          setTotalPages(1);
+        }
         
         // Transform the data to match BlogGrid expectations
-        const transformedBlogs = response.data.map(blog => ({
+        const transformedBlogs = (Array.isArray(blogsList) ? blogsList : []).map(blog => ({
           id: blog.id,
           title: blog.title || blog.blog_title || 'Untitled Blog',
           author: blog.author_name || 'Unknown Author',
@@ -40,13 +60,21 @@ const Recommend = () => {
         console.error('Error fetching recommendations:', error);
         setError('Failed to load recommendations. Please try again later.');
         setRecommendations([]);
+        setTotalPages(1);
+        setTotalBlogs(0);
       } finally {
         setLoading(false);
       }
     };
 
     fetchRecommendations();
-  }, []);
+  }, [currentPage]); // Re-fetch when page changes
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // Scroll to top when page changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   if (loading) {
     return (
@@ -92,7 +120,16 @@ const Recommend = () => {
         </p>
         
         {recommendations.length > 0 ? (
-          <BlogGrid blogs={recommendations} />
+          <>
+            <BlogGrid blogs={recommendations} />
+            {totalPages > 1 && (
+              <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </>
         ) : (
           <NoRecommendations />
         )}

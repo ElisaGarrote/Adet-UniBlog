@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import api from "../api"; // Import the API instance
 import logo from "../assets/icons/uniblog.svg";
 import "../styles/ResetPassword.css";
 
@@ -35,28 +36,20 @@ function ResetPassword() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/auth/password-reset/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }), // email is your username in this case
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (data.email) {
-          setEmailError(data.email[0]);
+      const response = await api.post("/auth/password-reset/", { email });
+      
+      setIsSubmitted(true);
+      setServerMessage("Password reset link has been sent if the account exists.");
+    } catch (err) {
+      if (err.response?.data) {
+        if (err.response.data.email) {
+          setEmailError(err.response.data.email[0]);
         } else {
-          setServerMessage(data.detail || "Something went wrong. Please try again.");
+          setServerMessage(err.response.data.detail || "Something went wrong. Please try again.");
         }
       } else {
-        setIsSubmitted(true);
-        setServerMessage("Password reset link has been sent if the account exists.");
+        setServerMessage("Network error. Please try again later.");
       }
-    } catch (err) {
-      setServerMessage("Network error. Please try again later.");
     }
   };
 
