@@ -10,10 +10,12 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . ./
+
+# Build with environment variables
 RUN npm run build
 
 # Serve with Caddy
-FROM caddy
+FROM caddy:alpine
 
 WORKDIR /app
 
@@ -21,5 +23,7 @@ COPY Caddyfile ./
 RUN caddy fmt Caddyfile --overwrite
 
 COPY --from=build /app/dist ./dist
+
+EXPOSE 80
 
 CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
