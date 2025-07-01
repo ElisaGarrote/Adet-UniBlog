@@ -16,23 +16,15 @@ RUN apt-get update \
         libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Copy and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Create a non-root user
-RUN adduser --disabled-password --gecos '' appuser
-RUN chown -R appuser:appuser /app
-USER appuser
-
 # Expose port
 EXPOSE 8000
 
-# Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "backend.wsgi:application"]
+# Run the application
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

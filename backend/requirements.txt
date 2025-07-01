@@ -13,5 +13,3 @@ pillow
 numpy
 scipy
 scikit-learn
-gunicorn
-whitenoise
