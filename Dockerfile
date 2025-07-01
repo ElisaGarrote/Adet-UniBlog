@@ -16,12 +16,11 @@ RUN apt-get update \
         libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy backend files
-COPY backend/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the entire backend directory first
+COPY backend/ ./
 
-# Copy backend project
-COPY backend/ .
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
