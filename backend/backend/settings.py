@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=*y4_wdgt05fo4g7=8_n@10*vr1k*#e*k&o!q16cqc6_z6=6pv'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-=*y4_wdgt05fo4g7=8_n@10*vr1k*#e*k&o!q16cqc6_z6=6pv')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 
 ALLOWED_HOSTS = ["*"]
 
@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # CORS should be first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,7 +74,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -110,14 +110,15 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #    }
 #}
 
+# Railway PostgreSQL database configuration
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': 'OHNVtyBcJzLKGBcuBiLtvGRcuUnYzEWM',
-        'HOST': 'interchange.proxy.rlwy.net',
-        'PORT': '40799',
+        'NAME': os.getenv('PGDATABASE', 'railway'),
+        'USER': os.getenv('PGUSER', 'postgres'),
+        'PASSWORD': os.getenv('PGPASSWORD', 'OHNVtyBcJzLKGBcuBiLtvGRcuUnYzEWM'),
+        'HOST': os.getenv('PGHOST', 'interchange.proxy.rlwy.net'),
+        'PORT': os.getenv('PGPORT', '40799'),
     }
 }
 
@@ -156,15 +157,53 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Additional static files directories (if any)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+] if (BASE_DIR / 'static').exists() else []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Configuration
 CORS_ALLOW_CREDENTIALS = True
+
+# For production - use specific origins for security
+if DEBUG:
+    # Development settings
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    # Production settings - only allow specific origins
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = [
+        "https://adet-uniblog-production.up.railway.app",
+        "http://localhost:5173",  # for local development
+        "http://127.0.0.1:5173",  # for local development
+    ]
+
+# Additional CORS headers for API requests
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# CSRF settings for production
+CSRF_TRUSTED_ORIGINS = [
+    "https://valiant-creativity-production.up.railway.app",
+    "https://adet-uniblog-production.up.railway.app",
+]
 
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -174,7 +213,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER")  # <- match Gmail
 
 # Where should the email link land?
-FRONTEND_RESET_URL = os.getenv("FRONTEND_RESET_URL", "http://localhost:5173/setnewpassword")
+FRONTEND_RESET_URL = os.getenv("FRONTEND_RESET_URL", "https://adet-uniblog-production.up.railway.app/setnewpassword") #production URL for Railway
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"

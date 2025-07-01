@@ -32,9 +32,6 @@ COPY . .
 RUN mkdir -p /app/media /app/staticfiles \
     && chmod -R 755 /app/media /app/staticfiles
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
 # Copy entrypoint script and make it executable
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
