@@ -164,12 +164,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 # Additional CORS settings for Railway deployment
 CORS_ALLOWED_ORIGINS = [
     "https://adet-uniblog-production.up.railway.app",
+    "https://valiant-creativity-production.up.railway.app",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
