@@ -8,3 +8,8 @@ pytz
 sqlparse
 psycopg2-binary
 python-dotenv
+scikit-learn
+scipy   
+pillow
+gunicorn
+dj-database-url
