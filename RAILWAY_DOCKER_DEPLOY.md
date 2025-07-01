@@ -35,7 +35,6 @@
    EMAIL_HOST_USER=adet.uniblog@gmail.com
    EMAIL_HOST_PASSWORD=fqppocxkdmpwdudb
    FRONTEND_RESET_URL=https://adet-uniblog-production.up.railway.app/setnewpassword
-   CORS_ALLOW_ALL_ORIGINS=False
    ```
 
 ### Frontend Service Setup:
